@@ -1,0 +1,25 @@
+extends layout
+
+block content
+  h1 Chat
+  .container
+    ul.nav.nav-tabs#chat-tabs
+      li.active
+        a(href='#general-chat', data-toggle='tab') #
+
+    .tab-content#messages
+      #general-chat.tab-pane.active.in
+
+    form(id='send-form', role='form').form-inline
+      .form-group
+        label(for='send-message').sr-only Message
+        input(type='text',id='send-message',placeholder='Message').form-control
+      input(id='send-button',type='submit',value='Send')
+
+    label(id='guest-name')
+    #user-list
+  script(src='/socket.io/socket.io.js')
+  script(src='//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js')
+  script(src='/js/bootstrap.min.js')
+  script(src='/js/chat.js')
+  script(src='/js/chat_ui.js')
