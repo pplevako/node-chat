@@ -21,10 +21,6 @@ module.exports = function(io) {
             id: u.id
         })
 
-        socket.emit('message', {
-            text: "Message for room"
-        })
-
         socket.emit('set name', {
             name: u.name
         })
@@ -32,7 +28,21 @@ module.exports = function(io) {
         socket.on('disconnect', function() {
             users.deleteById(u.id)
             socket.broadcast.emit('remove user', {
-                id: u.id
+                id: u.id,
+                name: u.name
+            })
+        })
+
+        socket.on('change name', function(data) {
+            var oldName = u.name
+            u.name = data.newName
+            socket.emit('set name', {
+                name: u.name
+            })
+            io.sockets.emit('user changed name', {
+                id: u.id,
+                oldName: oldName,
+                newName: u.name
             })
         })
 
@@ -44,19 +54,22 @@ module.exports = function(io) {
                     return;
                 sockets[data.otherUser].emit('message', {
                     text: data.text,
-                    room: socket.id
+                    room: socket.id,
+                    id: u.id
                 })
 
                 socket.emit('message', {
                     text: data.text,
-                    room: data.otherUser
+                    room: data.otherUser,
+                    id: u.id
                 })
             }
             else {
                 io.sockets.emit('message', {
 
                     text: data.text,
-                    room: ''
+                    room: '',
+                    id: u.id
                 })
             }
         })
