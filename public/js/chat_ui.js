@@ -101,7 +101,7 @@ $(document).ready(function() {
           $('<a>')
             .attr('href', '#' + id)
             .attr('data-toggle', 'tab')
-            .text($(this).attr('user-name'))
+            .text(users[$(this).attr('user-id')].name)
             .attr('user-id', $(this).attr('user-id'))
             .append($('<button></button>')
               .addClass('close')
