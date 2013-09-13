@@ -1,68 +1,65 @@
-/**
- * Created with JetBrains WebStorm.
- * User: renpika
- * Date: 9/10/13
- * Time: 8:34 PM
- * To change this template use File | Settings | File Templates.
- */
+'use strict'
+
+var User = require('./user')
+  , events = require('../constants/events')
+
 
 module.exports = Users
 
-function Users() {
-    this.users = {}
+
+
+
+/**
+ *
+ * @param io
+ * @constructor
+ */
+function Users(io) {
+  this.io = io
+  this.users = {}
 }
 
-var guestNumber = 1
-//var users = []
 
-Users.prototype.create = function(id) {
-    function assignGuestName() {
-        return 'Guest_' + guestNumber++
-    }
-    return this.users[id] = new User(id, assignGuestName())
+
+
+Users.prototype.create = function(socket) {
+  var user = new User(this, socket)
+  this.users[user.name] = user
+
+  this.io.sockets.emit(events.to['user connected'], user.name)
+
+  return user
 }
 
-Users.prototype.getList = function() {
 
+
+
+Users.prototype.deleteByName = function(name) {
+  delete this.users[name]
+
+  this.io.sockets.emit(events.to['user disconnected'], name)
 }
 
-Users.prototype.getById = function(id) {
-    return this.users[id]
+
+
+
+Users.prototype.getByName = function(name) {
+  return this.users[name]
 }
 
-Users.prototype.deleteById = function(id) {
-    delete this.users[id]
-}
 
-function User(id, name) {
-    this.id = id
-    this.name = name
-    this.rooms = []
-    this.privateChatIds = {}
-}
 
-User.prototype.joinRoom = function(room) {
-    this.rooms.push(room)
-}
 
-User.prototype.leaveRoom = function(room) {
-    var index = this.rooms.indexOf(room)
-    this.rooms.splice(index, 1)
-}
+/**
+ *
+ * @private
+ * @param {User} user
+ * @param {string} newName
+ */
+Users.prototype.rename = function(user, newName) {
+  var oldName = user.name
+  delete this.users[user.name]
+  this.users[newName] = user
 
-//User.prototype.addId = function(id) {
-//    this.privateChatIds.push(id)
-//}
-//
-//User.prototype.removeId = function(id) {
-//    var index = this.privateChatIds.indexOf(id)
-//    this.privateChatIds.splice(index, 1)
-//}
-
-User.prototype.addRoom = function(id, room) {
-    this.privateChatIds[id] = room
-}
-
-User.prototype.removeRoom = function(id) {
-    delete this.privateChatIds[id]
+  this.io.sockets.emit('vampire', oldName, newName)
 }

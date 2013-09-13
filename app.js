@@ -1,17 +1,11 @@
-
-/**
- * Module dependencies.
- */
+'use strict'
 
 var express = require('express')
-var routes = require('./routes')
-var http = require('http')
-var path = require('path')
-var app = express()
-var server = require('http').createServer(app)
-var io = require('socket.io').listen(server)
+  , path = require('path')
+  , app = express()
+  , server = require('http').createServer(app)
+  , io = require('socket.io').listen(server)
 
-// all environments
 app.configure('all', function() {
     app.set('port', process.env.PORT || 3000)
     app.set('views', __dirname + '/views')
@@ -26,21 +20,19 @@ app.configure('all', function() {
     app.use(express.static(path.join(__dirname, 'public')))
 })
 
-
-// development only
-app.configure('development', function () {
+app.configure('development', function() {
     app.use(express.errorHandler())
 })
 
 
-app.get('/', routes.index)
+app.get('/test', function(req, res) {
+  res.render('test')
+})
 
-// Socket.io Communication
-require('./routes/socket')(io)
 
-/**
- * Start Server
- */
-server.listen(app.get('port'), function () {
-    console.log('Express server listening on port ' + app.get('port'))
+require('./routes/http')(app)
+require('./routes/socket')(io.of('/chat'))
+
+server.listen(app.get('port'), function() {
+  console.log('Express server listening on port ' + app.get('port'))
 })
