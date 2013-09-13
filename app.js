@@ -34,6 +34,9 @@ app.configure('development', function () {
 
 
 app.get('/', routes.index)
+app.get('/partial/:view', function(req, res) {
+    res.render(req.params.view)
+})
 
 // Socket.io Communication
 require('./routes/socket')(io)
