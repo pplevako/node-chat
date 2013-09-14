@@ -8,9 +8,9 @@
   "dumbass",
   "clitor"
  ],
- "bannedIPs": [
-  "127.0.0.1"
- ],
+ "bannedIPs": [],
+ "chatWidth": 945,
+ "chatHeight": 400,
  "pendingURLs": [],
  "bitlyLogin": "liberitas",
  "bitlyKey": "R_5784b8d2a65281bcab1151993f527595",

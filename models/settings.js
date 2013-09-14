@@ -118,7 +118,7 @@ SettingsManager.prototype.approvePendingURL = function(id) {
 
   if (!pending) return
 
-  this.pendingURLs.splice(i-1, 1)
+  this.pendingURLs.splice(i - 1, 1)
   this.changed = true
 
   shorturl(pending.url, 'bit.ly', {
@@ -178,16 +178,14 @@ SettingsManager.prototype.removeRude = function(idx) {
 SettingsManager.prototype.serialize = function() {
   var out = {}
 
-  out.port = this.port
-  out.allowedDomains = this.allowedDomains
-  out.blacklist = this.blacklist
-  out.bannedIPs = this.bannedIPs
-  out.pendingURLs = this.pendingURLs
-  out.bitlyLogin = this.bitlyLogin
-  out.bitlyKey = this.bitlyKey
-  out.coolDownTimeout = this.coolDownTimeout
-  out.maxMessagesPerMin = this.maxMessagesPerMin
-  out.savedMessagesCount = this.savedMessagesCount
+  var keys = [
+    'port', 'allowedDomains', 'blacklist', 'bannedIPs', 'chatWidth',
+    'chatHeight', 'pendingURLs', 'bitlyLogin', 'bitlyKey', 'coolDownTimeout',
+    'maxMessagesPerMin', 'savedMessagesCount'
+  ]
+  keys.forEach(function(key) {
+    out[key] = this[key]
+  }, this)
 
   return out
 }

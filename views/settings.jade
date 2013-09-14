@@ -29,6 +29,21 @@ html(ng-app='ca', ng-controller='SettingsCtrl')
                 a.btn.btn-success(ng-click='approve($index)') Approve
             tr(ng-show='!pendingURLs.length')
               td(colspan='3') No pending URLS
+        h4 Banned IP addresses
+        table.table.table-bordered
+          thead
+            th IP
+            th Action
+          tbody
+            tr(ng-repeat='ip in bannedIPs')
+              td {{ip}}
+              td
+                a.btn.btn-danger(ng-click='removeIP($index)') Remove
+            tr(ng-show='!blacklist.length')
+              td(colspan='3') No IPs in banlist
+        .input-append
+          input(ng-model='newIP', type='text')
+          a.btn.btn-success(ng-click='addIP()') Add IP
       .span6
         h4 Blacklist
         table.table.table-bordered
@@ -61,21 +76,16 @@ html(ng-app='ca', ng-controller='SettingsCtrl')
         input(type='text', ng-model='bitlyKey')
         h5 Allowed domains (comma-separated):
         input(type='text', ng-model='allowedDomains')
-      .span6
-        h4 Banned IP addresses
-        table.table.table-bordered
-          thead
-            th IP
-            th Action
-          tbody
-            tr(ng-repeat='ip in bannedIPs')
-              td {{ip}}
-              td
-                a.btn.btn-danger(ng-click='removeIP($index)') Remove
-            tr(ng-show='!blacklist.length')
-              td(colspan='3') No IPs in banlist
+        h5 Chat width:
         .input-append
-          input(ng-model='newIP', type='text')
-          a.btn.btn-success(ng-click='addIP()') Add IP
+          input(type='number', ng-model='chatWidth', min='400')
+          span.add-on px
+        h5 Chat height:
+        .input-append
+          input(type='number', ng-model='chatHeight', min='100')
+          span.add-on px
+        h5 Allowed domains (comma-separated):
+        input(type='text', ng-model='allowedDomains')
+
 
 

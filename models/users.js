@@ -48,7 +48,7 @@ Users.prototype.create = function(socket) {
   user.socket.emit('users', this.usersList())
   user.socket.emit('me', user.serialize())
   user.socket.emit('history', this.history)
-  this.message(user.name, 'User @' + user.name + ' entered chat', 'new-user')
+  this.message(user.name, 'User @' + user.name + ' entered chat', 'new-user', user.serialize())
 
   return user
 }
@@ -89,9 +89,11 @@ Users.prototype.getByName = function(name) {
  * @param {string} sender Name of user who sent message
  * @param {string} message Message string
  * @param {string} type Message type
+ * @param {*} [extra] Extra data, whatever
  */
-Users.prototype.message = function(sender, message, type) {
+Users.prototype.message = function(sender, message, type, extra) {
   var msg = [type, sender, message, Date.now()]
+  if (extra) msg.push(extra)
 
   if (this.history.length >= settingsManager.savedMessagesCount) {
     var calls = this.history.length - settingsManager.savedMessagesCount
