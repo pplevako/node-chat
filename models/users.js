@@ -148,5 +148,5 @@ Users.prototype.usersList = function() {
   return Object.keys(this.users).map(function(name) {
     var user = this.users[name]
     return user.serialize()
-  })
+  }, this)
 }
