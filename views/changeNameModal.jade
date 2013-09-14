@@ -1,4 +1,5 @@
 .modal-header
+    button(type='button', class='close', ng-click='$dismiss()')&times
     h3 Enter your nickname
 .modal-body
     input(ng-model='data.name',placeholder='Nickname',type='text')

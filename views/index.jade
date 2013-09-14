@@ -8,21 +8,19 @@ block content
             tab(ng-repeat='tab in tabs' active='tab.active')
                 tab-heading
                     {{tab.title}}
-                    a(ng-click='closeTab(tab)') &nbsp; ×
+                    button(type='button', class='close', ng-click='closeTab(tab)') &nbsp; &times;
                 div
                     p(ng-repeat='message in messages[tab.title]') [{{message.date | date:'medium'}}] {{message.user}}:
                         span(ng-bind-html-unsafe= 'message.text | emotify')
 
-        button(ng-click='changeName()').btn @{{name}}
+        .input-prepend.input-append
+            button(ng-click='changeName()').btn @{{name}}
 
-        form(ng-submit='sendMessage()').form-inline
-            .form-group
-                //works only in bootstrap 3.0.0
-                //label(for='send-message').sr-only Message
-                input(id='send-message',ng-model='message',placeholder='Message',type='text').form-control#send-message
-            input(type='submit', value='Send').btn
-
-        button(popover='I have a title!', popover-title='The title.').btn titlehgf
+            form(ng-submit='sendMessage()').type-message
+                    //works only in bootstrap 3.0.0
+                    //label(for='send-message').sr-only Message
+                    input(id='send-message',ng-model='message',placeholder='Message',type='text').form-control#send-message
+                input(type='submit', value='Send').btn
 
         div(ng-repeat='user in users')
             label(ng-click='user.name == name || openTab(user.name)') @{{user.name}} ({{user.location}})
