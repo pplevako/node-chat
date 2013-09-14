@@ -1,0 +1,17 @@
+{
+ "port": 3000,
+ "allowedDomains": "http://localhost:3000,http://127.0.0.1:3000,http://google.com/",
+ "blacklist": [
+  "fuck",
+  "shit",
+  "asshole",
+  "dumbass",
+  "clitor"
+ ],
+ "pendingURLs": [],
+ "bitlyLogin": "liberitas",
+ "bitlyKey": "R_5784b8d2a65281bcab1151993f527595",
+ "coolDownTimeout": 5000,
+ "maxMessagesPerMin": 10,
+ "savedMessagesCount": 100
+}
