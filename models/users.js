@@ -45,6 +45,8 @@ Users.prototype.create = function(socket) {
   var user = new User(this, socket)
   this.users[user.name] = user
 
+  user.socket.emit('users', this.usersList())
+  user.socket.emit('me', user.serialize())
   user.socket.emit('history', this.history)
   this.message(user.name, 'User @' + user.name + ' entered chat', 'new-user')
 
@@ -89,7 +91,7 @@ Users.prototype.getByName = function(name) {
  * @param {string} type Message type
  */
 Users.prototype.message = function(sender, message, type) {
-  var msg = [type, sender, message]
+  var msg = [type, sender, message, Date.now()]
 
   if (this.history.length >= settingsManager.savedMessagesCount) {
     var calls = this.history.length - settingsManager.savedMessagesCount
@@ -132,4 +134,19 @@ Users.prototype.rename = function(user, newName) {
   this.users[newName] = user
 
   this.message(user.name, util.format('User @%s changed name to @%s', oldName, newName), 'rename')
+}
+
+
+
+
+/**
+ * List of users to send to user
+ *
+ * @returns {Array}
+ */
+Users.prototype.usersList = function() {
+  return Object.keys(this.users).map(function(name) {
+    var user = this.users[name]
+    return user.serialize()
+  })
 }

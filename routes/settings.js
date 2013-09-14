@@ -26,5 +26,13 @@ module.exports = function(io) {
     socket.on('remove rude', function(idx) {
       settingsManager.removeRude(idx)
     })
+
+    socket.on('add ip', function(ip) {
+      settingsManager.addIP(ip)
+    })
+
+    socket.on('remove ip', function(idx) {
+      settingsManager.removeIP(idx)
+    })
   })
 }

@@ -2,7 +2,7 @@ function SettingsCtrl($scope, $rootScope, $io) {
   $io.on('settings', function(settings) {
     Object.keys(settings).forEach(function(prop) {
       $rootScope.$apply(function() {
-        if (prop !== 'pendingURLs' && prop !== 'blacklist') {
+        if (!~['pendingURLs', 'blacklist', 'bannedIPs'].indexOf(prop)) {
           $scope.$watch(prop, function(value) {
             if (!value) return
             $io.emit('update', prop, value)
@@ -35,5 +35,18 @@ function SettingsCtrl($scope, $rootScope, $io) {
   $scope.addRude = function() {
     this.blacklist.push($scope.newRude)
     $io.emit('add rude', $scope.newRude)
+    $scope.newRude = ''
+  }
+
+  $scope.removeIP = function(idx) {
+    var ip = this.bannedIPs[idx]
+    this.bannedIPs.splice(idx, 1)
+    $io.emit('remove ip', idx)
+  }
+
+  $scope.addIP = function() {
+    this.bannedIPs.push($scope.newIP)
+    $io.emit('add ip', $scope.newIP)
+    $scope.newIP = ''
   }
 }

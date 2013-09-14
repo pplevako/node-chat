@@ -51,6 +51,19 @@ util.inherits(SettingsManager, EventEmitter)
 
 
 /**
+ * Add IP to banned list
+ *
+ * @param {string} ip IP address
+ */
+SettingsManager.prototype.addIP = function(ip) {
+  this.bannedIPs.push(ip)
+  this.changed = true
+}
+
+
+
+
+/**
  * Add rude word
  *
  * @param {string} rude Rude word
@@ -122,6 +135,31 @@ SettingsManager.prototype.approvePendingURL = function(id) {
 
 
 /**
+ * Check if given IP address is in ban list
+ *
+ * @param {string} address
+ */
+SettingsManager.prototype.isBanned = function(address) {
+  return ~this.bannedIPs.indexOf(address)
+}
+
+
+
+
+/**
+ * Remove IP from ban list
+ *
+ * @param {number} idx
+ */
+SettingsManager.prototype.removeIP = function(idx) {
+  this.bannedIPs.splice(idx, 1)
+  this.changed = true
+}
+
+
+
+
+/**
  * Remove rude word
  *
  * @param {number} idx
@@ -143,6 +181,7 @@ SettingsManager.prototype.serialize = function() {
   out.port = this.port
   out.allowedDomains = this.allowedDomains
   out.blacklist = this.blacklist
+  out.bannedIPs = this.bannedIPs
   out.pendingURLs = this.pendingURLs
   out.bitlyLogin = this.bitlyLogin
   out.bitlyKey = this.bitlyKey

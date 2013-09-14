@@ -99,13 +99,14 @@ Validator.prototype.message = function(user, message) {
       }
     })
     .then(function checkForRudeWords() {
-      if (!self.validateMessage(user, message)) {
+      /*if (!self.validateMessage(user, message)) {
         self.block(user)
 
         throw new BlockError('You tried to post rude word! Now you\'re blocked! :P')
-      }
+      }*/
+      return self.validateMessage(user, message)
     })
-    .then(function checkForLinks() {
+    .then(function checkForLinks(message) {
       return self.validateLinks(user, message)
     })
 }
@@ -140,9 +141,9 @@ Validator.prototype.rename = function(user, newName) {
       }
     })
     .then(function checkForRudeWords() {
-      if (!self.validateMessage(user, newName)) {
+      if (newName !== self.validateMessage(user, newName)) {
         self.block(user)
-        throw new BlockError('You tried to post rude word! Now you\'re blocked! :P')
+        throw new BlockError('You tried to use rude word! Now you\'re blocked! :P')
       }
     })
 }
@@ -170,15 +171,18 @@ Validator.prototype.validateLinks = function(user, message) {
 
 
 /**
- * Validate message: check black list
+ * Validate message: check black list words and replace them with ***
  *
  * @param {User} user User object
  * @param {string} message Message string
+ * @returns {string} Updated message string
  */
 Validator.prototype.validateMessage = function(user, message) {
-  return !this.settingsManager.blacklist.some(function(bad) {
-    return ~message.indexOf(bad)
+  this.settingsManager.blacklist.forEach(function(bad) {
+    message = message.split(bad).join('***')
   })
+
+  return message
 }
 
 

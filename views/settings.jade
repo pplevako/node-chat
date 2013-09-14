@@ -61,5 +61,21 @@ html(ng-app='ca', ng-controller='SettingsCtrl')
         input(type='text', ng-model='bitlyKey')
         h5 Allowed domains (comma-separated):
         input(type='text', ng-model='allowedDomains')
+      .span6
+        h4 Banned IP addresses
+        table.table.table-bordered
+          thead
+            th IP
+            th Action
+          tbody
+            tr(ng-repeat='ip in bannedIPs')
+              td {{ip}}
+              td
+                a.btn.btn-danger(ng-click='removeIP($index)') Remove
+            tr(ng-show='!blacklist.length')
+              td(colspan='3') No IPs in banlist
+        .input-append
+          input(ng-model='newIP', type='text')
+          a.btn.btn-success(ng-click='addIP()') Add IP
 
 

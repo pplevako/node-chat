@@ -29,7 +29,9 @@ app.configure('development', function() {
 
 // TODO remove when done
 
-app.get('/', routes.index)
+app.get('/', function(req, res) {
+  res.render('index')
+})
 app.get('/partial/:view', function(req, res) {
     res.render(req.params.view)
 })
