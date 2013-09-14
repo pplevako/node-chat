@@ -28,6 +28,11 @@ app.configure('development', function() {
 })
 
 // TODO remove when done
+
+app.get('/', routes.index)
+app.get('/partial/:view', function(req, res) {
+    res.render(req.params.view)
+})
 app.get('/test', function(req, res) {
   res.render('test')
 })
@@ -36,13 +41,6 @@ app.get('/test', function(req, res) {
 app.get('/admin', function(req, res) {
   res.render('settings')
 })
-
-
-app.head('/chat', function(req, res) {
-  debugger
-  res.end('asd')
-})
-
 
 require('./routes/http')(app)
 require('./routes/chat')(io.of('/chat'))

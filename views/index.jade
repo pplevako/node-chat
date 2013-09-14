@@ -1,32 +1,40 @@
 extends layout
 
 block content
-  h1 Chat
-  .container
-    ul.nav.nav-tabs#chat-tabs
-      li.active
-        a(href='#general-chat', data-toggle='tab') #
+    div(ng-controller='AppCtrl').container
+        h1 Mega Chat
+        tabset
+            tab(heading='#')
+            tab(ng-repeat='tab in tabs' active='tab.active')
+                tab-heading
+                    {{tab.title}}
+                    button(type='button', class='close', ng-click='closeTab(tab)') &nbsp; &times;
+                div
+                    p(ng-repeat='message in messages[tab.title]') [{{message.date | date:'medium'}}] {{message.user}}:
+                        span(ng-bind-html-unsafe= 'message.text | emotify')
 
-    .tab-content#messages
-      #general-chat.tab-pane.active.in
+        .input-prepend.input-append
+            button(ng-click='changeName()').btn @{{name}}
 
-    form(id='send-form', role='form').form-inline
-      .form-group
-        label(for='send-message').sr-only Message
-        input(type='text',id='send-message',placeholder='Message').form-control
-      input(id='send-button',type='submit',value='Send')
+            form(ng-submit='sendMessage()').type-message
+                    //works only in bootstrap 3.0.0
+                    //label(for='send-message').sr-only Message
+                    input(id='send-message',ng-model='message',placeholder='Message',type='text').form-control#send-message
+                input(type='submit', value='Send').btn
 
-    form(id='change-name-form', role='form').form-inline
-      .form-group
-        label(for='change-name').sr-only Name
-        input(type='text',id='change-name',placeholder='Name').form-control
-      input(id='change-name-button',type='submit',value='Change')
+        div(ng-repeat='user in users')
+            label(ng-click='user.name == name || openTab(user.name)') @{{user.name}} ({{user.location}})
+            div(ng-show='user.name == name')
+                label.label-success you
 
-
-      label(id='guest-name')
-    #user-list
-  script(src='/socket.io/socket.io.js')
-  script(src='//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js')
-  script(src='/js/bootstrap.min.js')
-  script(src='/js/chat.js')
-  script(src='/js/chat_ui.js')
+    script(src='//ajax.googleapis.com/ajax/libs/angularjs/1.0.8/angular.min.js')
+    script(src='js/lib/angular-sanitize.min.js')
+    script(src='/socket.io/socket.io.js')
+    script(src='//angular-ui.github.com/bootstrap/ui-bootstrap-tpls-0.6.0.js')
+    script(src='js/lib/ba-emotify.min.js')
+    script(src='js/emoticons.js')
+    script(src='js/app.js')
+    script(src='js/services.js')
+    script(src='js/controllers.js')
+    script(src='js/filters.js')
+    script(src='js/directives.js')
