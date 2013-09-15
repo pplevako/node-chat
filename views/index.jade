@@ -5,28 +5,28 @@ block content
       div.row-fluid
         div.span10
           tabset
-              tab(ng-repeat='tab in tabs' active='tab.active')
+              tab(ng-repeat='tab in tabs', active='tab.active', select='openTab(tab.title)')
                   tab-heading
                       | {{tab.title}}
-                      button(type='button', class='close', ng-click='closeTab(tab)') &nbsp; &times;
+                      button(type='button', class='close', ng-click='closeTab(tab)', ng-show='tab.close') &nbsp; &times;
                   div.messages
-                      p(ng-repeat='message in messages[tab.title]')
+                      p(ng-repeat='message in tab.messages')
                         span(ng-show='!message.type') [{{message.date | date:'medium'}}] {{message.user}}:
                           span(ng-bind-html-unsafe= 'message.text | emotify')
                         span(ng-show='message.type', ng-class='message.class') [{{message.date | date:'medium'}}]
                           span(ng-bind-html-unsafe= 'message.text | emotify')
 
           .input-prepend.input-append
-              button(ng-click='changeName()').btn @{{name}}
+              button(ng-click='changeName()').btn @{{me.name}}
 
               form(ng-submit='sendMessage()').type-message
                 input(id='send-message',ng-model='message',placeholder='Message',type='text').form-control#send-message
                 input(type='submit', value='Send', ng-click=).btn
         ul.span2.contact-list
           li(ng-repeat='user in users | orderBy:name')
-            label(ng-click='user.name == name || openTab(user.name)') @{{user.name}} ({{user.location}})
-            div(ng-show='user.name == name')
-                label.label-success you
+            label(ng-click='user.name == me.name || openTab(user.name)') @{{user.name}} ({{user.location}})
+            div(ng-show='user.name == me.name')
+                span.label.label-success you
 
     script(src='//ajax.googleapis.com/ajax/libs/angularjs/1.0.8/angular.min.js')
     script(src='js/lib/angular-sanitize.min.js')

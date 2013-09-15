@@ -117,8 +117,8 @@ Users.prototype.message = function(sender, message, type, extra) {
 Users.prototype.privateMessage = function(sender, recipient, message) {
   var rec = this.getByName(recipient)
   if (!rec) return
-
-  rec.sendPrivateMessage(sender, message)
+  rec.sendPrivateMessage(sender, sender, message)
+  this.getByName(sender).sendPrivateMessage(recipient, sender, message)
 }
 
 
@@ -135,7 +135,7 @@ Users.prototype.rename = function(user, newName) {
   delete this.users[oldName]
   this.users[newName] = user
 
-  this.message(user.name, util.format('User @%s changed name to @%s', oldName, newName), 'rename')
+  this.message(user.name, util.format('User @%s changed name to @%s', oldName, newName), 'rename', newName)
 }
 
 
