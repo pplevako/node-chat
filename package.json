@@ -1,15 +1,18 @@
 {
-  "name":         "express-angular-chat",
-  "version":      "0.0.1",
-  "private":      true,
-  "scripts":      {
+  "name": "express-angular-chat",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
     "postinstall": "cd node_modules ; cd geoip-lite ; npm run-script updatedb",
-    "start":       "node app.js"
+    "start": "node app.js"
   },
   "dependencies": {
-    "express":    "3.3.5",
+    "express": "3.3.5",
     "geoip-lite": "~1.1.1",
-    "jade":       "*",
-    "socket.io":  "~0.9.16"
+    "jade": "*",
+    "socket.io": "~0.9.16",
+    "country-data": "0.0.6",
+    "shorturl": "0.0.3",
+    "q": "~0.9.7"
   }
 }

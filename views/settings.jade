@@ -1,0 +1,91 @@
+!!! 5
+html(ng-app='ca', ng-controller='SettingsCtrl')
+  head
+    link(rel='stylesheet', href='//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap.min.css')
+    link(rel='stylesheet', href='css/app.css')
+    script(src='//ajax.googleapis.com/ajax/libs/angularjs/1.0.8/angular.min.js', type='application/javascript')
+    script(src='/socket.io/socket.io.js', type='application/javascript')
+    script(src='//angular-ui.github.com/bootstrap/ui-bootstrap-tpls-0.6.0.js', type='application/javascript')
+    script(src='js/app.js', type='application/javascript')
+    script(src='js/controllers.js', type='application/javascript')
+    script(src='js/directives.js', type='application/javascript')
+    script(src='js/filters.js', type='application/javascript')
+    script(src='js/services.js', type='application/javascript')
+  body
+    h3.text-center Chat settings
+    .container-fluid
+      .span6
+        h4 Pending URLs
+        table.table.table-bordered
+          thead
+            th ID
+            th URL
+            th Actions
+          tbody
+            tr(ng-repeat='pending in pendingURLs')
+              td {{pending.id}}
+              td {{pending.url | cut:60}}
+              td
+                a.btn.btn-success(ng-click='approve($index)') Approve
+            tr(ng-show='!pendingURLs.length')
+              td(colspan='3') No pending URLS
+        h4 Banned IP addresses
+        table.table.table-bordered
+          thead
+            th IP
+            th Action
+          tbody
+            tr(ng-repeat='ip in bannedIPs')
+              td {{ip}}
+              td
+                a.btn.btn-danger(ng-click='removeIP($index)') Remove
+            tr(ng-show='!blacklist.length')
+              td(colspan='3') No IPs in banlist
+        .input-append
+          input(ng-model='newIP', type='text')
+          a.btn.btn-success(ng-click='addIP()') Add IP
+      .span6
+        h4 Blacklist
+        table.table.table-bordered
+          thead
+            th Text
+            th Action
+          tbody
+            tr(ng-repeat='rude in blacklist')
+              td {{rude}}
+              td
+                a.btn.btn-danger(ng-click='removeRude($index)') Remove
+            tr(ng-show='!blacklist.length')
+              td(colspan='3') No rude words o_O!
+        .input-append
+          input(ng-model='newRude', type='text')
+          a.btn.btn-success(ng-click='addRude()') Add rude word
+      .span6
+        h4 Timeouts and other values
+        h5 Cool down timeout:
+        .input-append
+          input(type='number', ng-model='coolDownTimeout', min='1000')
+          span.add-on ms
+        h5 Max number of messages per minute (SPAM detection):
+        input(type='number', ng-model='maxMessagesPerMin', min=1)
+        h5 Messages to store in history:
+        input(type='number', ng-model='savedMessagesCount', min='10')
+        h5 Bit.ly login:
+        input(type='text', ng-model='bitlyLogin')
+        h5 Bit.ly API key:
+        input(type='text', ng-model='bitlyKey')
+        h5 Allowed domains (comma-separated):
+        input(type='text', ng-model='allowedDomains')
+        h5 Chat width:
+        .input-append
+          input(type='number', ng-model='chatWidth', min='400')
+          span.add-on px
+        h5 Chat height:
+        .input-append
+          input(type='number', ng-model='chatHeight', min='100')
+          span.add-on px
+        h5 Allowed domains (comma-separated):
+        input(type='text', ng-model='allowedDomains')
+
+
+

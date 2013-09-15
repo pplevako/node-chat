@@ -1,28 +1,29 @@
 extends layout
 
 block content
-    div(ng-controller='AppCtrl').container
-        h1 Mega Chat
-        tabset
-            tab(heading='#')
-            tab(ng-repeat='tab in tabs' active='tab.active')
-                tab-heading
-                    {{tab.title}}
-                    button(type='button', class='close', ng-click='closeTab(tab)') &nbsp; &times;
-                div
-                    p(ng-repeat='message in messages[tab.title]') [{{message.date | date:'medium'}}] {{message.user}}:
-                        span(ng-bind-html-unsafe= 'message.text | emotify')
+    div(ng-controller='AppCtrl').container-fluid
+      div.row-fluid
+        div.span10
+          tabset
+              tab(ng-repeat='tab in tabs' active='tab.active')
+                  tab-heading
+                      | {{tab.title}}
+                      button(type='button', class='close', ng-click='closeTab(tab)') &nbsp; &times;
+                  div.messages
+                      p(ng-repeat='message in messages[tab.title]')
+                        span(ng-show='!message.type') [{{message.date | date:'medium'}}] {{message.user}}:
+                          span(ng-bind-html-unsafe= 'message.text | emotify')
+                        span(ng-show='message.type', ng-class='message.class') [{{message.date | date:'medium'}}]
+                          span(ng-bind-html-unsafe= 'message.text | emotify')
 
-        .input-prepend.input-append
-            button(ng-click='changeName()').btn @{{name}}
+          .input-prepend.input-append
+              button(ng-click='changeName()').btn @{{name}}
 
-            form(ng-submit='sendMessage()').type-message
-                    //works only in bootstrap 3.0.0
-                    //label(for='send-message').sr-only Message
-                    input(id='send-message',ng-model='message',placeholder='Message',type='text').form-control#send-message
-                input(type='submit', value='Send').btn
-
-        div(ng-repeat='user in users')
+              form(ng-submit='sendMessage()').type-message
+                input(id='send-message',ng-model='message',placeholder='Message',type='text').form-control#send-message
+                input(type='submit', value='Send', ng-click=).btn
+        ul.span2.contact-list
+          li(ng-repeat='user in users | orderBy:name')
             label(ng-click='user.name == name || openTab(user.name)') @{{user.name}} ({{user.location}})
             div(ng-show='user.name == name')
                 label.label-success you

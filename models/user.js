@@ -26,23 +26,48 @@ function assignGuestName() {
 function User(manager, socket) {
   this.manager = manager
   this.socket = socket
+
+  /**
+   * User name
+   *
+   * @type {string}
+   */
   this.name = assignGuestName()
 
-  if (!geoip.applyTo(this, socket.handshake.address)) {
-    this.country = null
-    this.city = null
-  }
+  /**
+   * Timestamp: when user was blocked
+   *
+   * @type {number}
+   */
+  this.blockedAt = 0
+
+  /**
+   * Last message timestamp, updated when more than minute passed
+   *
+   * @type {number}
+   */
+  this.lastMessageAt = 0
+
+  /**
+   * Counter of messages per minute
+   *
+   * @type {number}
+   */
+  this.lastMessages = 0
+
+  this.country = null
+  this.city = null
+
+  geoip.applyTo(this, socket.handshake.address)
 }
 
 
 
 
 /**
- * Remove user
- *
- * @param {string} message
+ * Remove user, delete, destroy, kill, punish, hate people!!11
  */
-User.prototype.onDestroy = function() {
+User.prototype.destroy = function() {
   this.manager.deleteByName(this.name)
 }
 
@@ -55,7 +80,7 @@ User.prototype.onDestroy = function() {
  * @param {string} message
  */
 User.prototype.onMessage = function(message) {
-  this.socket.broadcast.emit('message', this.name, message)
+  this.manager.message(this.name, message)
 }
 
 
@@ -68,10 +93,7 @@ User.prototype.onMessage = function(message) {
  * @param {string} to
  */
 User.prototype.onPrivateMessage = function(message, to) {
-  var other = this.manager.getByName(to)
-  if (!other) return
-
-  other.sendPrivate(this.name, message)
+  this.manager.privateMessage(this.name, to, message)
 }
 
 
@@ -92,14 +114,22 @@ User.prototype.onRename = function(newName) {
 
 /**
  * Send private message to given user from other
+ *
  * @param {string} from
  * @param {string} message
  */
-User.prototype.sendPrivate = function(from, message) {
+User.prototype.sendPrivateMessage = function(from, message) {
   this.socket.emit('private messsage', from, message)
 }
 
 
+
+
+/**
+ * Serialize user
+ *
+ * @returns {Object}
+ */
 User.prototype.serialize = function() {
   var out = {}
   out.name = this.name
