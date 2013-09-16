@@ -28,7 +28,7 @@ module.exports = function(io) {
       function error(err) {
         var evt = err.reason || 'error'
 
-        console.error(err) // TODO remove when tested
+        console.error(err)
         socket.emit(evt, err.message)
       }
 

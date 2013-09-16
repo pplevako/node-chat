@@ -28,8 +28,6 @@ app.configure('development', function() {
   app.use(express.errorHandler())
 })
 
-// TODO remove when done
-
 
 
 require('./routes/http')(app)

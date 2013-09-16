@@ -161,8 +161,6 @@ define([
       }
 
       str += msg.text
-      // TODO add emoticons
-
       return str
     }
 
