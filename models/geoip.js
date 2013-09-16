@@ -7,7 +7,6 @@ exports.applyTo = function(obj, address) {
   var lookup = geoip.lookup(address.address)
 
   if (!lookup) {
-    obj.country = address.address
     return false
   }
 
