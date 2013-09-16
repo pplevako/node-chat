@@ -5,7 +5,6 @@ var config = require('./config')
   , path = require('path')
   , app = express()
   , server = require('http').createServer(app)
-  , settingsManager = require('./models/settings')
   , io = require('socket.io').listen(server)
 
 app.configure('all', function() {
@@ -27,8 +26,6 @@ app.configure('all', function() {
 app.configure('development', function() {
   app.use(express.errorHandler())
 })
-
-// TODO remove when done
 
 
 

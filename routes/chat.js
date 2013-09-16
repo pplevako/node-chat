@@ -28,7 +28,7 @@ module.exports = function(io) {
       function error(err) {
         var evt = err.reason || 'error'
 
-        console.error(err) // TODO remove when tested
+        console.error(err)
         socket.emit(evt, err.message)
       }
 
@@ -45,11 +45,10 @@ module.exports = function(io) {
 
 
       function privateMessageRequest(message, to) {
-          var to1 = message.to
         validator
-          .message(user, message.message)
+          .message(user, message)
           .then(function(message) {
-            user.onPrivateMessage(message, to1)
+            user.onPrivateMessage(message, to)
           })
           .fail(error)
           .done()

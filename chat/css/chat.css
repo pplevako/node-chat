@@ -6,6 +6,10 @@ body {
   position: relative;
 }
 
+.chat-app .panel-body {
+  overflow: visible;
+}
+
 .chat-app .row .blocker {
   position: absolute;
   z-index: 100500;
@@ -13,15 +17,8 @@ body {
   height: 100%;
 }
 
-
-.chat-app .container {
-  background-color: #fafafa;
-  border-radius: 6px;
-  padding: 20px;
-}
 .chat-app .messages {
   overflow-y: auto;
-  margin-top: 5px;
   margin-bottom: 5px;
 }
 
@@ -42,12 +39,32 @@ body {
   cursor: pointer;
 }
 
-.chat-app .users a {
-
-}
-
-.chat-app ul {
+.chat-app .users ul {
   margin: 0;
   padding: 0;
   list-style: none inside none;
+  overflow-y: auto;
+}
+
+.chat-app .user ul > li:first-child {
+  margin-left: 10px;
+}
+
+.chat-app .popover-smiles {
+  margin-top: 5px;
+}
+
+.chat-app .popover-smiles .panel-body {
+  text-align: justify;
+}
+
+.chat-app .popover-smiles .panel-body > span {
+  cursor: pointer;
+  display: inline-block;
+  font-size: 20px;
+  line-height: 20px;
+  height: 22px;
+  margin-right: 9px;
+  margin-bottom: 5px;
+  width: 22px;
 }

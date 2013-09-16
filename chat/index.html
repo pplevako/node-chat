@@ -1,89 +1,103 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <title>Chat layout</title>
+<head>
+  <title>Chat layout</title>
 
-    <script data-main="main.js" src="lib/require.js/require.js"></script>
-  </head>
-  <body>
-    <div class="chat-app" id="chat" ng-controller="MainCtrl">
-      <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <link media="screen" rel="stylesheet" type="text/css" href="css/jquery.cssemoticons.css"/>
-      <link media="screen" rel="stylesheet" type="text/css" href="css/bootstrap.min.css" />
-      <link media="screen" rel="stylesheet" type="text/css" href="css/chat.css" />
+  <script data-main="main.js" src="lib/require.js/require.js"></script>
+</head>
+<body>
+<div class="container">
+  <div class="chat-app panel panel-default" id="chat" ng-controller="MainCtrl" ng-style="{width: chatWidth + 'px', height: chatHeight + 'px'}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link media="screen" rel="stylesheet" type="text/css" href="css/jquery.cssemoticons.css"/>
+    <link media="screen" rel="stylesheet" type="text/css" href="css/bootstrap.min.css"/>
+    <link media="screen" rel="stylesheet" type="text/css" href="css/chat.css"/>
 
-      <!-- change name modal -->
-      <div class="modal fade" id="changeName" tabindex="-1" role="dialog" aria-labelledby="changeNameLabel" aria-hidden="true" ng-controller="ChangeNameCtrl">
-        <div class="modal-dialog">
-          <div class="modal-content">
-            <div class="modal-header">
-              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-              <h3 class="modal-title" id="changeNameLabel">Change name:</h3>
-            </div>
-            <div class="modal-body">
-              <form ng-submit="saveName()">
-                <input class="form-control" id="newName" type="text" ng-model="newName" />
-                <p class="text-danger">{{ error }}</p>
-              </form>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-primary" data-dismiss="modal" ng-click="saveName()">Save</button>
-            </div>
+    <!-- change name modal -->
+    <div class="modal fade" id="changeName" tabindex="-1" role="dialog" aria-labelledby="changeNameLabel" aria-hidden="true" ng-controller="ChangeNameCtrl">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h3 class="modal-title" id="changeNameLabel">Change name:</h3>
           </div>
-        </div>
-      </div>
-
-      <div class="container" ng-style="{width: chatWidth + 'px'}">
-        <div class="row">
-          <span class="btn btn-danger disabled blocker" ng-show="blocked">
-            <h3>Time to cool down: {{ blocked }}</h3>
-          </span>
-          <div class="col-xs-12 col-sm-6 col-md-8">
-            <!-- messages list -->
-            <div ng-controller="MessagesCtrl">
-              <ul class="nav nav-tabs">
-                <li ng-class="{active: (current == chat), bold: chat.hasNew}" ng-click="setCurrent(chat)" ng-repeat="chat in chats">
-                  <a>
-                    {{ chat.name }}
-                    <i class="glyphicon glyphicon-remove" ng-click="close(chat)" ng-show="$index"></i>
-                  </a>
-
-                </li>
-              </ul>
-
-              <div class="tab-content messages" ng-style="{height: chatHeight + 'px'}">
-                <div class="tab-pane" ng-class="{active: (current == chat)}" ng-repeat="chat in chats">
-                  <p ng-class="messageClass(msg.type)" ng-repeat="msg in chat.messages" ng-bind-html-unsafe="(msg.date|date:'yyyy/MM/dd HH:mm:ss') + messageString(msg)">
-
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            <!-- message box -->
-            <div class="message-box" ng-controller="MessageCtrl">
-              <form ng-submit="send()" class="input-group">
-                <span class="input-group-btn">
-                  <a class="btn btn-default" ng-click="changeName()">@{{ me.name }}</a>
-                </span>
-                <input class="form-control" type="text" placeholder="Type message..."  ng-disabled="disabled" ng-model="message" />
-                <span class="input-group-btn">
-                  <input class="btn btn-default" type="submit" value="Send" />
-                </span>
-              </form>
-            </div>
+          <div class="modal-body">
+            <form ng-submit="saveName()">
+              <input class="form-control" id="newName" type="text" ng-model="newName"/>
+              <p class="text-danger">{{ error }}</p>
+            </form>
           </div>
-          <div class="col-xs-6 col-sm-6 col-md-4 users" ng-controller="UsersCtrl">
-            <p>Users in chat: <strong>{{ users.length + 1 }}</strong></p>
-            <ul>
-              <li ng-show="user.name != me.name" ng-repeat="user in users">
-                <a ng-click="startPrivate(user)">@{{ user.name }}</a>
-                <strong>({{ locationString(user) }})</strong>
-               </li>
-            </ul>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary" data-dismiss="modal" ng-click="saveName()">Save
+            </button>
           </div>
         </div>
       </div>
     </div>
-  </body>
+
+    <div class="panel-body container">
+      <div class="row">
+          <span class="btn btn-danger disabled blocker" ng-show="blocked">
+            <h3>Time to cool down: {{ blocked }}</h3>
+          </span>
+
+        <div class="col-md-9">
+          <!-- messages list -->
+          <div ng-controller="MessagesCtrl">
+            <ul class="nav nav-tabs">
+              <li ng-class="{active: (current == chat), bold: chat.hasNew}" ng-click="setCurrent(chat)" ng-repeat="chat in chats">
+                <a>
+                  {{ chat.name }}
+                  <i class="glyphicon glyphicon-remove" ng-click="close(chat)" ng-show="$index"></i>
+                </a>
+
+              </li>
+            </ul>
+
+            <div class="tab-content messages" ng-style="{height: chatHeight - 121 + 'px'}">
+              <div class="tab-pane" ng-class="{active: (current == chat)}" ng-repeat="chat in chats">
+                <p ng-class="messageClass(msg.type)" ng-repeat="msg in chat.messages" ng-bind-html-unsafe="(msg.date|date:'yyyy/MM/dd HH:mm:ss') + '&nbsp;' + messageString(msg)">
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- message box -->
+          <div class="message-box" ng-controller="MessageCtrl">
+            <form ng-submit="send()" class="input-group">
+                <span class="input-group-btn">
+                  <a class="btn btn-default" ng-click="changeName()">@{{ me.name
+                    }}</a>
+                </span>
+              <input class="form-control" type="text" placeholder="Type message..." ng-disabled="disabled" ng-model="message"/>
+              <span class="input-group-addon btn btn-smiles" ng-click="showSmiles()"><img src="img/smile.png"/></span>
+                <span class="input-group-btn">
+                  <input class="btn btn-default" type="submit" value="Send"/>
+                </span>
+            </form>
+          </div>
+        </div>
+        <div class="col-md-3 users" ng-controller="UsersCtrl">
+          <p>Users in chat: <strong>{{ users.length + 1 }}</strong></p>
+          <ul ng-style="{height: (chatHeight - 70) + 'px'}">
+            <li ng-show="user.name != me.name" ng-repeat="user in users">
+              <a ng-click="startPrivate(user)">@{{ user.name }}</a>
+              <strong>({{ locationString(user) }})</strong>
+            </li>
+          </ul>
+        </div>
+
+        <div class="clearfix"></div>
+
+        <!-- smiles popover -->
+        <div class="col-md-9 popover-smiles" ng-controller="SmilesCtrl" ng-show="show">
+          <div class="panel panel-default">
+            <div class="panel-body"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
 </html>
