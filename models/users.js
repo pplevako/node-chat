@@ -147,7 +147,11 @@ Users.prototype.rename = function(user, newName) {
   delete this.users[oldName]
   this.users[newName] = user
 
-  this.message(user.name, util.format('User @%s changed name to @%s', oldName, newName), 'rename')
+  this.message(
+    user.name,
+    util.format('User @%s changed name to @%s', oldName, newName),
+    'rename',
+    {oldName: oldName, newName: newName})
 }
 
 
