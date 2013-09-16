@@ -8,6 +8,10 @@ module.exports = function(io) {
     io.emit('pending url', pending)
   })
 
+  settingsManager.on('users count update', function(count) {
+    io.emit('users count update', count)
+  })
+
   io.on('connection', function(socket) {
     socket.emit('settings', settingsManager.serialize())
 
@@ -19,12 +23,12 @@ module.exports = function(io) {
       settingsManager.approvePendingURL(idx)
     })
 
-    socket.on('add rude', function(rude) {
-      settingsManager.addRude(rude)
+    socket.on('add domain', function(domain) {
+      settingsManager.addDomain(domain)
     })
 
-    socket.on('remove rude', function(idx) {
-      settingsManager.removeRude(idx)
+    socket.on('remove domain', function(idx) {
+      settingsManager.removeDomain(idx)
     })
 
     socket.on('add ip', function(ip) {
@@ -33,6 +37,14 @@ module.exports = function(io) {
 
     socket.on('remove ip', function(idx) {
       settingsManager.removeIP(idx)
+    })
+
+    socket.on('add rude', function(rude) {
+      settingsManager.addRude(rude)
+    })
+
+    socket.on('remove rude', function(idx) {
+      settingsManager.removeRude(idx)
     })
   })
 }

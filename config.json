@@ -9,12 +9,17 @@
   "clitor"
  ],
  "bannedIPs": [],
- "chatWidth": 945,
- "chatHeight": 400,
+ "chatWidth": 900,
+ "chatHeight": 450,
  "pendingURLs": [],
+ "allowedURLDomains": [
+  "google.com",
+  "ya.ru"
+ ],
  "bitlyLogin": "liberitas",
  "bitlyKey": "R_5784b8d2a65281bcab1151993f527595",
  "coolDownTimeout": 5000,
  "maxMessagesPerMin": 10,
- "savedMessagesCount": 100
+ "savedMessagesCount": 100,
+ "usersCount": 2
 }

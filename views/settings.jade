@@ -12,10 +12,15 @@ html(ng-app='ca', ng-controller='SettingsCtrl')
     script(src='js/filters.js', type='application/javascript')
     script(src='js/services.js', type='application/javascript')
   body
-    h3.text-center Chat settings
+    .clearfix
     .container-fluid
+      .row-fluid
+        h3.pull-left Chat settings
+        h3.pull-right.text-error Online:
+          | &nbsp;
+          strong {{usersCount}}
       .span6
-        h4 Pending URLs
+        h4 Pending URL domains
         table.table.table-bordered
           thead
             th ID
@@ -24,11 +29,28 @@ html(ng-app='ca', ng-controller='SettingsCtrl')
           tbody
             tr(ng-repeat='pending in pendingURLs')
               td {{pending.id}}
-              td {{pending.url | cut:60}}
+              td {{pending.domain | cut:60}}
               td
                 a.btn.btn-success(ng-click='approve($index)') Approve
             tr(ng-show='!pendingURLs.length')
+              td(colspan='3') No pending
+        h4 Allowed domains URLs
+        table.table.table-bordered
+          thead
+            th Domain
+            th Actions
+          tbody
+            tr(ng-repeat='domain in allowedURLDomains')
+              td {{domain | cut:60}}
+              td
+                a.btn.btn-danger(ng-click='removeDomain($index)') Remove
+            tr(ng-show='!allowedURLDomains.length')
               td(colspan='3') No pending URLS
+
+        .input-append
+          input(ng-model='newDomain', type='text')
+          a.btn.btn-success(ng-click='addDomain()') Add IP
+
         h4 Banned IP addresses
         table.table.table-bordered
           thead

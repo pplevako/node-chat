@@ -5,6 +5,7 @@ var config = require('./config')
   , path = require('path')
   , app = express()
   , server = require('http').createServer(app)
+  , settingsManager = require('./models/settings')
   , io = require('socket.io').listen(server)
 
 app.configure('all', function() {
@@ -19,7 +20,7 @@ app.configure('all', function() {
   app.use(express.session())
   app.use(app.router)
 
-  app.use('/', express.static(path.join(__dirname, 'public')))
+  app.use('/chat', express.static(path.join(__dirname, 'chat')))
   app.use('/admin', express.static(path.join(__dirname, 'admin')))
 })
 
@@ -29,20 +30,7 @@ app.configure('development', function() {
 
 // TODO remove when done
 
-app.get('/', function(req, res) {
-  res.render('index')
-})
-app.get('/partial/:view', function(req, res) {
-    res.render(req.params.view)
-})
-app.get('/test', function(req, res) {
-  res.render('test')
-})
 
-// render settings page
-app.get('/admin', function(req, res) {
-  res.render('settings')
-})
 
 require('./routes/http')(app)
 require('./routes/chat')(io.of('/chat'))

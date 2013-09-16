@@ -119,7 +119,7 @@ User.prototype.onRename = function(newName) {
  * @param {string} message
  */
 User.prototype.sendPrivateMessage = function(from, message) {
-  this.socket.emit('private messsage', from, message)
+  this.socket.emit('private message', from, message)
 }
 
 
@@ -132,15 +132,11 @@ User.prototype.sendPrivateMessage = function(from, message) {
  */
 User.prototype.serialize = function() {
   var out = {}
+
   out.name = this.name
-  if (this.country) {
-    out.location = this.country
-  } else {
-    out.location = null
-  }
-  if (this.city) {
-    out.location += ', ' + this.city
-  }
+  out.country = this.country
+  out.state = this.state
+  out.city = this.city
 
   return out
 }

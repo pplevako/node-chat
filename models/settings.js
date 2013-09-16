@@ -33,6 +33,8 @@ function SettingsManager(config) {
     this[key] = config[key]
   }
 
+  this.usersCount = 0
+
   setInterval(function() {
     if (!self.changed) {
       return
@@ -46,6 +48,19 @@ function SettingsManager(config) {
   }, 5000)
 }
 util.inherits(SettingsManager, EventEmitter)
+
+
+
+
+/**
+ * Add allowed URL domain
+ *
+ * @param {string} domain Valid domain name, I hope
+ */
+SettingsManager.prototype.addDomain = function(domain) {
+  this.allowedURLDomains.push(domain)
+  this.changed = true
+}
 
 
 
@@ -147,6 +162,19 @@ SettingsManager.prototype.isBanned = function(address) {
 
 
 /**
+ * Remove domain from allowed domains list
+ *
+ * @param {number} idx
+ */
+SettingsManager.prototype.removeDomain = function(idx) {
+  this.allowedURLDomains.splice(idx, 1)
+  this.changed = true
+}
+
+
+
+
+/**
  * Remove IP from ban list
  *
  * @param {number} idx
@@ -180,8 +208,8 @@ SettingsManager.prototype.serialize = function() {
 
   var keys = [
     'port', 'allowedDomains', 'blacklist', 'bannedIPs', 'chatWidth',
-    'chatHeight', 'pendingURLs', 'bitlyLogin', 'bitlyKey', 'coolDownTimeout',
-    'maxMessagesPerMin', 'savedMessagesCount'
+    'chatHeight', 'pendingURLs', 'allowedURLDomains', 'bitlyLogin', 'bitlyKey',
+    'coolDownTimeout', 'maxMessagesPerMin', 'savedMessagesCount', 'usersCount'
   ]
   keys.forEach(function(key) {
     out[key] = this[key]
@@ -202,4 +230,27 @@ SettingsManager.prototype.updateSettings = function(key, value) {
 }
 
 
+
+
+/**
+ * Update current online
+ */
+SettingsManager.prototype.usersCountUpdate = function(by) {
+  this.usersCount += by
+  this.emit('users count update', this.usersCount)
+}
+
+
+
+
+/**
+ * User settings
+ */
+SettingsManager.prototype.userSettings = function() {
+  return {
+    'chatWidth': this.chatWidth,
+    'chatHeight': this.chatHeight,
+    'coolDownTimeout': this.coolDownTimeout
+  }
+}
 module.exports = new SettingsManager(config)

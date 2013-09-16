@@ -3,9 +3,10 @@
 var BlockError = require('../shared/errors').BlockError
   , MINUTE = 60000
   , q = require('q')
+  , urlParse = require('url').parse
   , settingsManager = require('./settings')
   , SpamError = require('../shared/errors').SpamError
-  , URL_REGEXP = /http[s]?:\/\/[0-9A-Za-z-\.@:%_\+~#=]+\/?[a-zA-Z0-9_\-\+\.\/]*\??[a-zA-Z0-9_%&\-\+\.=]*#?[!a-zA-Z0-9_%&\-\+\.=]*/g
+  , URL_REGEXP = new RegExp('(http[s]?:\\/\\/(www\\.)?|ftp:\\/\\/(www\\.)?|www\\.)?([0-9A-Za-z-\\.@:%_+~#=]+)+((\\.[a-zA-Z]{2,4})+)(/(.)*)?(\\?([^ ])+)?', 'g')
 
 
 
@@ -46,6 +47,8 @@ Validator.prototype.isBlocked = function(user) {
     return false
   } else if (now - user.blockedAt > this.settingsManager.coolDownTimeout) {
     user.blockedAt = 0
+    user.lastMessageAt = 0
+    user.lastMessages = 0
     return false
   }
 
@@ -161,9 +164,18 @@ Validator.prototype.validateLinks = function(user, message) {
   var settingsManager = this.settingsManager
 
   return message.replace(URL_REGEXP, function(url) {
-    var linkId = settingsManager.addPendingURL(url)
+    if (url.indexOf('http') !== 0 && url.indexOf('ftp:') !== 0) {
+      url = 'http://' + url
+    }
 
-    return '@link:' + linkId + '@'
+    console.log(url)
+    var parsed = urlParse(url)
+
+    if (!~settingsManager.allowedURLDomains.indexOf(parsed.hostname)) {
+      return '***'
+    } else {
+      return '<a href="' + encodeURI(url) + '" target="_blank">' + url + '</a>'
+    }
   })
 }
 
@@ -171,7 +183,9 @@ Validator.prototype.validateLinks = function(user, message) {
 
 
 /**
- * Validate message: check black list words and replace them with ***
+ * Validate message:
+ * 1. check black list words and replace them with ***
+ * 2. cut down html
  *
  * @param {User} user User object
  * @param {string} message Message string
@@ -182,6 +196,7 @@ Validator.prototype.validateMessage = function(user, message) {
     message = message.split(bad).join('***')
   })
 
+  message = message.replace(/<[^>]+>/g, '')
   return message
 }
 

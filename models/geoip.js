@@ -1,7 +1,6 @@
 'use strict'
 
 var geoip = require('geoip-lite')
-  , countries = require('country-data').countries
 
 
 exports.applyTo = function(obj, address) {
@@ -11,7 +10,8 @@ exports.applyTo = function(obj, address) {
     return false
   }
 
-  obj.country = countries[lookup.country].name
+  obj.country = lookup.country
+  obj.state = lookup.region
   obj.city = lookup.city
 
   return true
