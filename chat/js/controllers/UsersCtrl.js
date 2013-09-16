@@ -8,7 +8,19 @@ define([], function() {
       $scope.users = users
     })
 
-    $scope.getUser = function(name) {
+    $scope.orderMeCity = function(user) {
+        return !(user.city === $rootScope.me.city)
+    }
+
+    $scope.orderMeCountry = function(user) {
+        return !(user.country === $rootScope.me.country)
+    }
+
+    $scope.orderMeState = function(user) {
+        return !(user.state === $rootScope.me.state)
+    }
+
+      $scope.getUser = function(name) {
       var i = 0
         , user
 
