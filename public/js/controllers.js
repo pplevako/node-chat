@@ -157,6 +157,14 @@ function AppCtrl($scope, socket, $modal, $log) {
         }
     }
 
+    $scope.orderLocation = function(user) {
+        return !(user.location === $scope.me.location)
+    }
+
+    $scope.orderMe = function(user) {
+        return !(user === $scope.me)
+    }
+
     $scope.sendMessage = function() {
         if ($scope.activeTab === generalChatTab) {
             socket.emit('message', $scope.message)
@@ -190,7 +198,6 @@ AppCtrl.prototype.initIOListeners = function($scope, socket) {
 
     socket.on('users', function(list) {
         $scope.users = list
-        //$scope.users.push(me)
     })
 
     socket.on('history', function(history) {

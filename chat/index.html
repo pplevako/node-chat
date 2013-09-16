@@ -80,7 +80,7 @@
         <div class="col-md-3 users" ng-controller="UsersCtrl">
           <p>Users in chat: <strong>{{ users.length + 1 }}</strong></p>
           <ul ng-style="{height: (chatHeight - 70) + 'px'}">
-            <li ng-show="user.name != me.name" ng-repeat="user in users">
+            <li ng-show="user.name != me.name" ng-repeat="user in users | orderBy:[orderMeCountry, orderMeState, orderMeCity, 'country', 'state', 'city']">
               <a ng-click="startPrivate(user)">@{{ user.name }}</a>
               <strong>({{ locationString(user) }})</strong>
             </li>
