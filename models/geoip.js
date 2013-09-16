@@ -4,7 +4,7 @@ var geoip = require('geoip-lite')
 
 
 exports.applyTo = function(obj, address) {
-  var lookup = geoip.lookup(address.address)
+  var lookup = geoip.lookup(address)
 
   if (!lookup) {
     return false

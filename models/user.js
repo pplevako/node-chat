@@ -58,8 +58,13 @@ function User(manager, socket) {
   this.country = null
   this.city = null
 
-  console.dir(socket.handshake)
-  geoip.applyTo(this, socket.handshake.address)
+  var addr
+  if (socket.handshake.headers['x-forwarded-for']) {
+    addr = socket.handshake.headers['x-forwarded-for']
+  } else {
+    addr = socket.handshake.address.address
+  }
+  geoip.applyTo(this, addr)
 }
 
 
