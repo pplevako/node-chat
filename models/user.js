@@ -58,6 +58,7 @@ function User(manager, socket) {
   this.country = null
   this.city = null
 
+  console.dir(socket.handshake)
   geoip.applyTo(this, socket.handshake.address)
 }
 
