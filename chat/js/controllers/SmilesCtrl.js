@@ -1,10 +1,10 @@
 'use strict'
 
 define([
+  'angular',
   'config',
-  'jquery',
   'css-emoticons'
-], function(config, $) {
+], function(angular, config) {
 
   function SmilesCtrl($scope, $rootScope, $element) {
     $scope.show = false
@@ -12,6 +12,16 @@ define([
     $scope.$on('toggle smiles popover', function() {
       $scope.show = !$scope.show
     })
+
+    $(document).mouseup(function(e) {
+      var container = angular.element();
+
+      if (!container.is(e.target) && container.has(e.target).length === 0) {
+        $rootScope.$apply(function() {
+          $scope.show = false
+        })
+      }
+    });
 
     this.initSmiles($rootScope, $element)
   }
@@ -21,7 +31,7 @@ define([
       , $container = $root.find('.panel-body')
 
     config.smiles.forEach(function(smile) {
-      var $smile = $('<span></span>&nbsp;')
+      var $smile = angular.element('<span></span>&nbsp;')
       $container.append($smile)
 
       $smile.html(smile)
