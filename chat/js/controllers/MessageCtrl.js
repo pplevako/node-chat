@@ -2,10 +2,11 @@
 
 define([
   'config',
-  'jquery',
-  'bootstrap'
+  'jquery'
 ], function(config, $) {
   function MessageCtrl($scope, $rootScope, $io) {
+    $scope.message = ''
+
     $scope.changeName = function() {
       $(config.renameModalSelector).modal('show')
     }
@@ -32,6 +33,18 @@ define([
         })
       }, config.lockTimeout)
     }
+
+    $scope.showSmiles = function() {
+      $rootScope.$broadcast('toggle smiles popover')
+    }
+
+
+    $scope.$on('send smile', function(event, smile) {
+      $rootScope.$apply(function() {
+        $scope.message += smile + ' '
+      })
+
+    })
   }
 
   return MessageCtrl

@@ -3,13 +3,13 @@ require.config({
   'paths':   {
     'angular':          '../lib/angular/angular.min',
     'angular-sanitize': '../lib/angular/angular-sanitize.min',
-    'jquery':           '../lib/jquery/jquery.min',
-    'css-emoticons':    '../lib/css-emoticons/jquery.cssemoticons.min',
     'bootstrap':        '../lib/bootstrap/bootstrap.min',
-    'socket.io':        '../lib/socket.io/socket.io'
+    'css-emoticons':    '../lib/css-emoticons/jquery.cssemoticons.min',
+    'jquery':           '../lib/jquery/jquery.min',
+    'socket.io':        '../lib/socket.io/socket.io',
   },
   'shim':    {
-    'angular':          {'exports': 'angular'},
+    'angular':          {'deps': ['jquery'], 'exports': 'angular'},
     'angular-sanitize': {'deps': ['angular']},
     'bootstrap':        {'deps': ['jquery']},
     'css-emoticons':    {'deps': ['jquery']}

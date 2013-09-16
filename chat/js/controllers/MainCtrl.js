@@ -31,8 +31,6 @@ define([
           $scope[k] = settings[k]
         }
       }
-
-      $scope.chatHeight -= 146
     })
 
     /** Handle message in case it has some special type */

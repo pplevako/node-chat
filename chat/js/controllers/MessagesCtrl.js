@@ -273,7 +273,7 @@ define([
         , msgObject = utils.toMessageObject([null, from, message, Date.now()])
 
       if (chat) {
-        $scope.addMessage(chat, message)
+        $scope.addMessage(chat, msgObject)
       } else {
         $scope.startPrivate(from, msgObject)
       }

@@ -119,7 +119,7 @@ User.prototype.onRename = function(newName) {
  * @param {string} message
  */
 User.prototype.sendPrivateMessage = function(from, message) {
-  this.socket.emit('private messsage', from, message)
+  this.socket.emit('private message', from, message)
 }
 
 
