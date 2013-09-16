@@ -45,10 +45,11 @@ module.exports = function(io) {
 
 
       function privateMessageRequest(message, to) {
+          var to1 = message.to
         validator
-          .message(user, message)
+          .message(user, message.message)
           .then(function(message) {
-            user.onPrivateMessage(message, to)
+            user.onPrivateMessage(message, to1)
           })
           .fail(error)
           .done()
