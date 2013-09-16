@@ -23,7 +23,7 @@ block content
                 input(id='send-message',ng-model='message',placeholder='Message',type='text').form-control#send-message
                 input(type='submit', value='Send', ng-click=).btn
         ul.span2.contact-list
-          li(ng-repeat='user in users | orderBy:name')
+          li(ng-repeat='user in users | orderBy:[orderMe, orderLocation, "location"]')
             label(ng-click='user.name == me.name || openTab(user.name)') @{{user.name}} ({{user.location}})
             div(ng-show='user.name == me.name')
                 span.label.label-success you
