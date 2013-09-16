@@ -45,10 +45,19 @@ Users.prototype.create = function(socket) {
   var user = new User(this, socket)
   this.users[user.name] = user
 
-  user.socket.emit('users', this.usersList())
+  // notify admin page
+  settingsManager.usersCountUpdate(1)
+
   user.socket.emit('me', user.serialize())
+  user.socket.emit('settings', settingsManager.userSettings())
+  user.socket.emit('users', this.usersList(user.name))
   user.socket.emit('history', this.history)
-  this.message(user.name, 'User @' + user.name + ' entered chat', 'new-user', user.serialize())
+
+  this.message(
+    user.name,
+    'User @' + user.name + ' entered chat',
+    'new-user',
+    user.serialize())
 
   return user
 }
@@ -64,7 +73,10 @@ Users.prototype.create = function(socket) {
 Users.prototype.deleteByName = function(name) {
   delete this.users[name]
 
-  this.message(name, 'User @' + name + ' left', 'dead-user')
+  this.message(name, 'User @' + name + ' left', 'dead-user', name)
+
+  // notify admin page
+  settingsManager.usersCountUpdate(-1)
 }
 
 
@@ -117,8 +129,8 @@ Users.prototype.message = function(sender, message, type, extra) {
 Users.prototype.privateMessage = function(sender, recipient, message) {
   var rec = this.getByName(recipient)
   if (!rec) return
-  rec.sendPrivateMessage(sender, sender, message)
-  this.getByName(sender).sendPrivateMessage(recipient, sender, message)
+
+  rec.sendPrivateMessage(sender, message)
 }
 
 
@@ -135,7 +147,7 @@ Users.prototype.rename = function(user, newName) {
   delete this.users[oldName]
   this.users[newName] = user
 
-  this.message(user.name, util.format('User @%s changed name to @%s', oldName, newName), 'rename', newName)
+  this.message(user.name, util.format('User @%s changed name to @%s', oldName, newName), 'rename')
 }
 
 
@@ -144,11 +156,16 @@ Users.prototype.rename = function(user, newName) {
 /**
  * List of users to send to user
  *
+ * @param {string} exclude Name of user to exclude
  * @returns {Array}
  */
-Users.prototype.usersList = function() {
-  return Object.keys(this.users).map(function(name) {
+Users.prototype.usersList = function(exclude) {
+  var list = []
+  Object.keys(this.users).forEach(function(name) {
+    if (name === exclude) return
+
     var user = this.users[name]
-    return user.serialize()
+    list.push(user.serialize())
   }, this)
+  return list
 }

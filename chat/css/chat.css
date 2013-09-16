@@ -1,0 +1,53 @@
+body {
+  margin-top: 40px;
+}
+
+.chat-app .row {
+  position: relative;
+}
+
+.chat-app .row .blocker {
+  position: absolute;
+  z-index: 100500;
+  width: 100%;
+  height: 100%;
+}
+
+
+.chat-app .container {
+  background-color: #fafafa;
+  border-radius: 6px;
+  padding: 20px;
+}
+.chat-app .messages {
+  overflow-y: auto;
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
+.chat-app .messages p {
+  margin-bottom: 0;
+}
+
+.chat-app .bold {
+  font-weight: bold;
+}
+
+.chat-app .users p {
+  line-height: 20px;
+  margin: 10px 10px 10px 0;
+}
+
+.chat-app .users a {
+  cursor: pointer;
+}
+
+.chat-app .users a {
+
+}
+
+.chat-app ul {
+  margin: 0;
+  padding: 0;
+  list-style: none inside none;
+}

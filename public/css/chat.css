@@ -1,0 +1,12 @@
+.type-message {
+    display: inline-block;
+}
+
+.messages {
+  height: 400px
+}
+
+ul.contact-list {
+  list-style: none;
+  margin-top: 40px;
+}
