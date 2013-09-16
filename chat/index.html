@@ -41,7 +41,7 @@
             <h3>Time to cool down: {{ blocked }}</h3>
           </span>
 
-        <div class="col-md-9">
+        <div class="col-md-8">
           <!-- messages list -->
           <div ng-controller="MessagesCtrl">
             <ul class="nav nav-tabs">
@@ -77,7 +77,7 @@
             </form>
           </div>
         </div>
-        <div class="col-md-3 users" ng-controller="UsersCtrl">
+        <div class="col-md-4 users" ng-controller="UsersCtrl">
           <p>Users in chat: <strong>{{ users.length + 1 }}</strong></p>
           <ul ng-style="{height: (chatHeight - 70) + 'px'}">
             <li ng-show="user.name != me.name" ng-repeat="user in users | orderBy:[orderMeCountry, orderMeState, orderMeCity, 'country', 'state', 'city']">
@@ -90,7 +90,7 @@
         <div class="clearfix"></div>
 
         <!-- smiles popover -->
-        <div class="col-md-9 popover-smiles" ng-controller="SmilesCtrl" ng-show="show">
+        <div class="col-md-8 popover-smiles" ng-controller="SmilesCtrl" ng-show="show">
           <div class="panel panel-default">
             <div class="panel-body"></div>
           </div>
