@@ -195,7 +195,7 @@ define([
         str.push('<span class="', $scope.messageClass(msg.type), '">', msg.text, '</span>')
       } else {
         str.push('<span class="user">&gt;', msg.from, '</span>')
-        str.push('&nbsp;')
+        str.push(':&nbsp;')
         str.push(msg.text)
       }
 
