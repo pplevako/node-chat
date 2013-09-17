@@ -6,6 +6,35 @@ define([
   'utils',
   'css-emoticons'
 ], function(config, $, utils) {
+  function prettyTime(ts) {
+    var date = new Date(ts)
+      , minutes = date.getMinutes()
+      , seconds = date.getSeconds()
+
+    var str = ''
+    if (!minutes) {
+      str += '00'
+    } else if (minutes < 10) {
+      str += '0' + minutes
+    } else {
+      str += minutes
+    }
+
+    str += ':'
+
+    if (!seconds) {
+      str += '00'
+    } else if (seconds < 10) {
+      str += '0' + seconds
+    } else {
+      str += seconds
+    }
+
+    return str
+  }
+
+
+
   function MessagesCtrl($scope, $rootScope, $io) {
     /** Scope variables */
     $scope.chats = [
@@ -34,7 +63,8 @@ define([
      * @param message
      */
     $scope.addMessage = function(chat, message) {
-      var length = chat.messages.push(message)
+      var self = this
+        , length = chat.messages.push(message)
         , idx = $scope.getChatIndex(chat.name)
 
       $scope.markHasNew(chat)
@@ -46,6 +76,8 @@ define([
         $(message).emoticonize({
           animate: true
         })
+
+        self.scrollChat(messages)
       }, 300)
     }
 
@@ -121,24 +153,6 @@ define([
     }
 
     /**
-     * Message type to class
-     *
-     * @param {string} type Message type
-     * @returns {string} Bootstrap CSS text-* class
-     */
-    $scope.messageClass = function(type) {
-      if (!type) return null
-
-      var map = {
-        'rename': 'text-info',
-        'new-user': 'text-success',
-        'dead-user': 'text-success'
-      }
-
-      return map[type]
-    }
-
-    /**
      * Mark given chat with 'hasNew' flag if it's not opened
      *
      * @param {Object} chat
@@ -150,30 +164,54 @@ define([
     }
 
     /**
+     * Message type to class
+     *
+     * @param {string} type Message type
+     * @returns {string} Bootstrap CSS text-* class
+     */
+    $scope.messageClass = function(type) {
+      if (!type) return null
+
+      var map = {
+        'rename': 'system',
+        'new-user': 'system',
+        'dead-user': 'system'
+      }
+
+      return map[type]
+    }
+
+    /**
      * Generate message string
      *
      * @param {Object} msg
      */
     $scope.messageString = function(msg) {
-      var str = ''
-      if (!msg.type) {
-        str += msg.from + ': '
+      var str = []
+
+      str.push('<span class="time">', prettyTime(msg.date), '</span>')
+      str.push('&nbsp;')
+      if (msg.type) {
+        str.push('<span class="', $scope.messageClass(msg.type), '">', msg.text, '</span>')
+      } else {
+        str.push('<span class="user">&gt;', msg.from, '</span>')
+        str.push('&nbsp;')
+        str.push(msg.text)
       }
 
-      str += msg.text
-      return str
+      return str.join('')
     }
 
     /**
      * Scroll current chat to bottom
+     *
+     * @param {Element} messagesElement
      */
-    $scope.scrollCurrent = function() {
-      var chat = $(config.currentChatSelector)
-        , messagesBox = $(config.messagesSelector)
+    $scope.scrollChat = function(messagesElement) {
+        var chat = $(messagesElement)
+          , messagesBox = $(config.messagesSelector)
 
-      setTimeout(function() {
         messagesBox.scrollTop(chat[0].scrollHeight - messagesBox.height());
-      }, 300)
     }
 
     /**
@@ -182,13 +220,18 @@ define([
      * @param {Object} chat Chat object
      */
     $scope.setCurrent = function(chat) {
+      var self = this
       $rootScope.current = chat
 
       if (chat.hasNew) {
         chat.hasNew = false
       }
 
-      $scope.scrollCurrent()
+      setTimeout(function() {
+        var idx = $scope.getChatIndex(chat.name)
+        self.scrollChat($(config.messagesSelector).children()[idx])
+      }, 50)
+
     }
 
     /**
@@ -253,8 +296,6 @@ define([
       while (data = history.shift()) {
         $scope.addMessage(mainChat, utils.toMessageObject(data))
       }
-
-      $scope.scrollCurrent()
     })
 
     /** When message is posted to global chat */
@@ -264,7 +305,6 @@ define([
 
       $scope.addMessage(mainChat, message)
       $scope.addToPrivate(message)
-      $scope.scrollCurrent()
     })
 
     /** Private message received */
@@ -277,8 +317,6 @@ define([
       } else {
         $scope.startPrivate(from, msgObject)
       }
-
-      $scope.scrollCurrent()
     })
   }
 

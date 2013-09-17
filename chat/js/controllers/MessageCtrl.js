@@ -12,8 +12,12 @@ define([
     }
 
     $scope.send = function() {
-      var message = $scope.message
+      var message = ($scope.message || '').trim()
         , to = $rootScope.current.name
+
+      if (!message) {
+        return
+      }
 
       $scope.disabled = true
       setTimeout(function() {

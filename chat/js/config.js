@@ -2,13 +2,12 @@
 
 define([], function() {
   return {
-    baseUrl:            'http://murmuring-plains-2912.herokuapp.com/',
+    baseUrl:            'http://127.0.0.1:3000/',
     chatRootSelector:   '#chat',
     lockTimeout:         400,
     mainChatLabel:       'Main',
     renameModalSelector: '#changeName',
     renameFieldSelector: '#newName',
-    currentChatSelector: '.chat-app .messages .active',
     messagesSelector:    '.chat-app .messages',
     smiles:              [
       ":)", ":]", "=]", "=)", "8)", ":}", ":D", ":(", ":[", ":{", "=(", ";)",

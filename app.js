@@ -12,7 +12,7 @@ app.configure('all', function() {
   app.set('port', process.env.PORT || config.port)
   app.set('views', __dirname + '/views')
   app.set('view engine', 'jade')
-  app.use(express.logger('short '))
+  app.use(express.logger('short'))
   app.use(express.methodOverride())
 
   /** Allowed domains filter */

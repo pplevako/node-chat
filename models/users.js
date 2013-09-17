@@ -70,7 +70,7 @@ Users.prototype.create = function(socket) {
 
   this.message(
     user.name,
-    'User @' + user.name + ' entered chat',
+    user.name + ' entered chat',
     'new-user',
     user.serialize())
 
@@ -93,7 +93,7 @@ Users.prototype.create = function(socket) {
 Users.prototype.deleteByName = function(name) {
   delete this.users[name]
 
-  this.message(name, 'User @' + name + ' left', 'dead-user', name)
+  this.message(name, name + ' left', 'dead-user', name)
 
   // notify admin page
   settingsManager.emit('user deleted', name)
@@ -169,7 +169,7 @@ Users.prototype.rename = function(user, newName) {
 
   this.message(
     user.name,
-    util.format('User @%s changed name to @%s', oldName, newName),
+    util.format('%s changed name to %s', oldName, newName),
     'rename',
     {oldName: oldName, newName: newName})
 

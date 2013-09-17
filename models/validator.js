@@ -6,7 +6,7 @@ var BlockError = require('../shared/errors').BlockError
   , urlParse = require('url').parse
   , settingsManager = require('./settings')
   , SpamError = require('../shared/errors').SpamError
-  , URL_REGEXP = new RegExp('(http[s]?:\\/\\/(www\\.)?|ftp:\\/\\/(www\\.)?|www\\.)?([0-9A-Za-z-\\.@:%_+~#=]+)+((\\.[a-zA-Z]{2,4})+)(/(.)*)?(\\?([^ ])+)?', 'g')
+  , URL_REGEXP = new RegExp('(http[s]?:\\/\\/(www\\.)?|ftp:\\/\\/(www\\.)?|www\\.)?([0-9A-Za-z-\\.@:%_+~#=]+)+((\\.[a-zA-Z]{2,4})+)(/[^\\? ]*)?(\\?([^ ])+)?', '')
 
 
 
