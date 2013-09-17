@@ -5,6 +5,7 @@ var config = require('../config')
   , fs = require('fs')
   , path = require('path')
   , q = require('q')
+  , urlParse = require('url').parse
   , util = require('util')
 
 
@@ -189,7 +190,7 @@ SettingsManager.prototype.serialize = function() {
     if (this.users.users.hasOwnProperty(name)) {
       out.users.push({
         name: name,
-        ip: this.users.users[name].ip
+        ip:   this.users.users[name].ip
       })
     }
   }
@@ -216,9 +217,29 @@ SettingsManager.prototype.updateSettings = function(key, value) {
  */
 SettingsManager.prototype.userSettings = function() {
   return {
-    'chatWidth': this.chatWidth,
-    'chatHeight': this.chatHeight,
+    'chatWidth':       this.chatWidth,
+    'chatHeight':      this.chatHeight,
     'coolDownTimeout': this.coolDownTimeout
   }
 }
+
+/**
+ * Validate referer header - check if domain is allowed to run chat
+ *
+ */
+SettingsManager.prototype.validateReferer = function(req, res, next) {
+  var ref = req.get('referer')
+    , parsed
+
+  if (!ref) return res.send(403, '<h1>Not allowed</h1>')
+
+  parsed = urlParse(ref)
+  if (!~this.allowedDomains.indexOf(parsed.host)) {
+    return res.send(403, '<h1>Not allowed</h1>')
+  }
+
+  next()
+}
+
+
 module.exports = new SettingsManager(config)

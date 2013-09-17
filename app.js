@@ -5,29 +5,27 @@ var config = require('./config')
   , path = require('path')
   , app = express()
   , server = require('http').createServer(app)
+  , settingsManager = require('./models/settings')
   , io = require('socket.io').listen(server)
 
 app.configure('all', function() {
   app.set('port', process.env.PORT || config.port)
   app.set('views', __dirname + '/views')
   app.set('view engine', 'jade')
-  app.use(express.favicon())
-  app.use(express.logger('dev'))
-  app.use(express.bodyParser())
+  app.use(express.logger('short '))
   app.use(express.methodOverride())
-  app.use(express.cookieParser('your secret here'))
-  app.use(express.session())
-  app.use(app.router)
+
+  /** Allowed domains filter */
+  app.use('/chat.min.js', function(req, res, next) {
+    settingsManager.validateReferer(req, res, next)
+  })
 
   app.use(express.static(path.join(__dirname, 'chat')))
   app.use('/admin', express.static(path.join(__dirname, 'admin')))
+
+  /** Router after static */
+  app.use(app.router)
 })
-
-app.configure('development', function() {
-  app.use(express.errorHandler())
-})
-
-
 
 require('./routes/http')(app)
 require('./routes/chat')(io.of('/chat'))
