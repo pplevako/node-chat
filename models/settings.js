@@ -5,7 +5,6 @@ var config = require('../config')
   , fs = require('fs')
   , path = require('path')
   , q = require('q')
-  , shorturl = require('shorturl')
   , util = require('util')
 
 
@@ -33,8 +32,6 @@ function SettingsManager(config) {
     this[key] = config[key]
   }
 
-  this.usersCount = 0
-
   setInterval(function() {
     if (!self.changed) {
       return
@@ -44,13 +41,27 @@ function SettingsManager(config) {
     var configPath = path.join(__dirname, '../config.json')
       , out = self.serialize()
 
-    out.usersCount = 0
+    delete out.users
+
     fs.writeFile(configPath, JSON.stringify(out, null, ' '), function(err) {
       if (err) console.error(err)
     })
   }, 5000)
 }
 util.inherits(SettingsManager, EventEmitter)
+
+
+
+
+/**
+ * Add allowed domain
+ *
+ * @param {string} allowed Valid domain name, I hope
+ */
+SettingsManager.prototype.addAllowed = function(allowed) {
+  this.allowedDomains.push(allowed)
+  this.changed = true
+}
 
 
 
@@ -95,64 +106,6 @@ SettingsManager.prototype.addRude = function(rude) {
 
 
 /**
- * Add url to list of url waiting to be enabled and return it's identifier
- *
- * @param {string} url URL address
- * @returns {string} HEX unique id
- */
-SettingsManager.prototype.addPendingURL = function(url) {
-  var pending = {
-    url: url,
-    id:  generateId()
-  }
-
-  this.pendingURLs.push(pending)
-  this.changed = true
-
-  this.emit('pending url', pending)
-  return pending.id
-}
-
-
-
-
-/**
- * Mark given url
- *
- * @param {string} id HEX-id for URL
- */
-SettingsManager.prototype.approvePendingURL = function(id) {
-  var self = this
-    , pending = null
-    , el
-    , i = 0
-
-  while (el = this.pendingURLs[i++]) {
-    if (el.id === id) {
-      pending = el
-      break
-    }
-  }
-
-  if (!pending) return
-
-  this.pendingURLs.splice(i - 1, 1)
-  this.changed = true
-
-  shorturl(pending.url, 'bit.ly', {
-    login:  this.bitly.login,
-    apiKey: this.bitly.key
-  }, function(tinyURL) {
-    self.emit('approved url', pending.id, tinyURL)
-  })
-
-  this.changed = true
-}
-
-
-
-
-/**
  * Check if given IP address is in ban list
  *
  * @param {string} address
@@ -166,6 +119,19 @@ SettingsManager.prototype.isBanned = function(address) {
 
 /**
  * Remove domain from allowed domains list
+ *
+ * @param {number} idx
+ */
+SettingsManager.prototype.removeAllowed = function(idx) {
+  this.allowedDomains.splice(idx, 1)
+  this.changed = true
+}
+
+
+
+
+/**
+ * Remove domain from allowed URL domains list
  *
  * @param {number} idx
  */
@@ -211,12 +177,22 @@ SettingsManager.prototype.serialize = function() {
 
   var keys = [
     'port', 'allowedDomains', 'blacklist', 'bannedIPs', 'chatWidth',
-    'chatHeight', 'pendingURLs', 'allowedURLDomains', 'bitlyLogin', 'bitlyKey',
-    'coolDownTimeout', 'maxMessagesPerMin', 'savedMessagesCount', 'usersCount'
+    'chatHeight', 'allowedURLDomains', 'bitlyLogin', 'bitlyKey',
+    'coolDownTimeout', 'maxMessagesPerMin', 'savedMessagesCount'
   ]
   keys.forEach(function(key) {
     out[key] = this[key]
   }, this)
+
+  out.users = []
+  for (var name in this.users.users) {
+    if (this.users.users.hasOwnProperty(name)) {
+      out.users.push({
+        name: name,
+        ip: this.users.users[name].ip
+      })
+    }
+  }
 
   return out
 }
@@ -230,17 +206,6 @@ SettingsManager.prototype.serialize = function() {
 SettingsManager.prototype.updateSettings = function(key, value) {
   this[key] = value
   this.changed = true
-}
-
-
-
-
-/**
- * Update current online
- */
-SettingsManager.prototype.usersCountUpdate = function(by) {
-  this.usersCount += by
-  this.emit('users count update', this.usersCount)
 }
 
 

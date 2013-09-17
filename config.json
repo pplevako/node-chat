@@ -1,6 +1,8 @@
 {
  "port": 3000,
- "allowedDomains": "http://localhost:3000,http://127.0.0.1:3000,http://google.com/",
+ "allowedDomains": [
+  "http://google.com:1000/"
+ ],
  "blacklist": [
   "fuck",
   "shit",
@@ -11,7 +13,6 @@
  "bannedIPs": [],
  "chatWidth": 900,
  "chatHeight": 450,
- "pendingURLs": [],
  "allowedURLDomains": [
   "google.com",
   "ya.ru"
@@ -20,6 +21,5 @@
  "bitlyKey": "R_5784b8d2a65281bcab1151993f527595",
  "coolDownTimeout": 5000,
  "maxMessagesPerMin": 10,
- "savedMessagesCount": 100,
- "usersCount": 1
+ "savedMessagesCount": 100
 }

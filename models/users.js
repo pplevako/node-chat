@@ -30,6 +30,24 @@ function Users(io) {
    * @type {Array}
    */
   this.history = []
+
+  // INFO: reference for settings manager to get users list
+  settingsManager.users = this
+}
+
+
+
+
+/**
+ * Create & add new user
+ *
+ * @param {string} name User name to ban
+ */
+Users.prototype.ban = function(name) {
+  var user = this.getByName(name)
+  if (!user) return
+
+  user.socket.manager.onClientDisconnect(user.socket.id);
 }
 
 
@@ -45,9 +63,6 @@ Users.prototype.create = function(socket) {
   var user = new User(this, socket)
   this.users[user.name] = user
 
-  // notify admin page
-  settingsManager.usersCountUpdate(1)
-
   user.socket.emit('me', user.serialize())
   user.socket.emit('settings', settingsManager.userSettings())
   user.socket.emit('users', this.usersList(user.name))
@@ -58,6 +73,11 @@ Users.prototype.create = function(socket) {
     'User @' + user.name + ' entered chat',
     'new-user',
     user.serialize())
+
+  settingsManager.emit('user added', {
+    name: user.name,
+    ip: user.ip
+  })
 
   return user
 }
@@ -76,7 +96,7 @@ Users.prototype.deleteByName = function(name) {
   this.message(name, 'User @' + name + ' left', 'dead-user', name)
 
   // notify admin page
-  settingsManager.usersCountUpdate(-1)
+  settingsManager.emit('user deleted', name)
 }
 
 
@@ -152,6 +172,8 @@ Users.prototype.rename = function(user, newName) {
     util.format('User @%s changed name to @%s', oldName, newName),
     'rename',
     {oldName: oldName, newName: newName})
+
+  settingsManager.emit('user renamed', {oldName: oldName, newName: newName})
 }
 
 

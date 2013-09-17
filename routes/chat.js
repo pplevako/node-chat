@@ -10,19 +10,17 @@ var BlockError = require('../shared/errors').BlockError
 module.exports = function(io) {
   var users = new Users(io)
 
-  settingsManager.on('approved url', function(id, tinyURL) {
-    io.emit('approved url', id, tinyURL)
-  })
-
   io
     .authorization(function(handshakeData, callback) {
-      if (settingsManager.isBanned(handshakeData.address.address)) {
+      if (settingsManager.isBanned(handshakeData.headers['x-forwarded-for'] || handshakeData.address.address)) {
         callback(new Error('You\'re banned by IP'))
       } else {
         callback(null, true)
       }
     })
     .on('connection', function(socket) {
+      if (socket.isAdmin) return
+
       var user = users.create(socket)
 
       function error(err) {

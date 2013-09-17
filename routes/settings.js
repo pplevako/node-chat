@@ -4,23 +4,25 @@ var settingsManager = require('../models/settings')
 
 
 module.exports = function(io) {
-  settingsManager.on('pending url', function(pending) {
-    io.emit('pending url', pending)
+  settingsManager.on('user added', function(user) {
+    io.emit('user added', user)
   })
 
-  settingsManager.on('users count update', function(count) {
-    io.emit('users count update', count)
+  settingsManager.on('user deleted', function(name) {
+    io.emit('user deleted', name)
+  })
+
+  settingsManager.on('user renamed', function(data) {
+    io.emit('user renamed', data)
   })
 
   io.on('connection', function(socket) {
+    socket.isAdmin = true
+
     socket.emit('settings', settingsManager.serialize())
 
     socket.on('update', function(key, value) {
       settingsManager.updateSettings(key, value)
-    })
-
-    socket.on('approve url', function(idx) {
-      settingsManager.approvePendingURL(idx)
     })
 
     socket.on('add domain', function(domain) {
@@ -29,6 +31,14 @@ module.exports = function(io) {
 
     socket.on('remove domain', function(idx) {
       settingsManager.removeDomain(idx)
+    })
+
+    socket.on('add allowed', function(allowed) {
+      settingsManager.addAllowed(allowed)
+    })
+
+    socket.on('remove allowed', function(idx) {
+      settingsManager.removeAllowed(idx)
     })
 
     socket.on('add ip', function(ip) {
@@ -45,6 +55,10 @@ module.exports = function(io) {
 
     socket.on('remove rude', function(idx) {
       settingsManager.removeRude(idx)
+    })
+
+    socket.on('ban', function(name) {
+      settingsManager.users.ban(name)
     })
   })
 }

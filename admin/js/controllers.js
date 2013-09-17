@@ -1,8 +1,10 @@
 function SettingsCtrl($scope, $rootScope, $io) {
+  $scope.users = []
+
   $io.on('settings', function(settings) {
     Object.keys(settings).forEach(function(prop) {
       $rootScope.$apply(function() {
-        if (!~['pendingURLs', 'blacklist', 'bannedIPs'].indexOf(prop)) {
+        if (!~['allowedDomains', 'users', 'blacklist', 'bannedIPs'].indexOf(prop)) {
           $scope.$watch(prop, function(value) {
             if (!value) return
             $io.emit('update', prop, value)
@@ -14,23 +16,42 @@ function SettingsCtrl($scope, $rootScope, $io) {
     })
   })
 
-  $io.on('pending url', function(pending) {
+  $io.on('user added', function(user) {
     $rootScope.$apply(function() {
-      $scope.pendingURLs.push(pending)
+      $scope.users.push(user)
     })
   })
 
-  $io.on('users count update', function(count) {
+  $io.on('user deleted', function(name) {
     $rootScope.$apply(function() {
-      $scope.usersCount = count
+      var i = 0
+        , user
+
+      while (user = $scope.users[i]) {
+        if (user.name === name) {
+          $scope.users.splice(i, 1)
+          break
+        }
+
+        i++
+      }
     })
   })
 
-  $scope.approve = function(idx) {
-    var pending = this.pendingURLs[idx]
-    $scope.pendingURLs.splice(idx, 1)
-    $io.emit('approve url', pending.id)
-  }
+  $io.on('user renamed', function(data) {
+    $rootScope.$apply(function() {
+      var i = 0
+        , user
+
+      while (user = $scope.users[i]) {
+        if (user.name === data.oldName) {
+          user.name = data.newName
+          break
+        }
+        i++
+      }
+    })
+  })
 
   $scope.removeDomain = function(idx) {
     var domain = this.allowedURLDomains[idx]
@@ -44,15 +65,27 @@ function SettingsCtrl($scope, $rootScope, $io) {
     $scope.newDomain = ''
   }
 
+  $scope.removeAllowed = function(idx) {
+    var domain = this.allowedDomains[idx]
+    this.allowedDomains.splice(idx, 1)
+    $io.emit('remove allowed', idx)
+  }
+
+  $scope.addAllowed = function() {
+    this.allowedDomains.push($scope.newAllowed)
+    $io.emit('add allowed', $scope.newAllowed)
+    $scope.newAllowed = ''
+  }
+
   $scope.removeIP = function(idx) {
     var ip = this.bannedIPs[idx]
     this.bannedIPs.splice(idx, 1)
     $io.emit('remove ip', idx)
   }
 
-  $scope.addIP = function() {
-    this.bannedIPs.push($scope.newIP)
-    $io.emit('add ip', $scope.newIP)
+  $scope.addIP = function(ip) {
+    this.bannedIPs.push(ip || $scope.newIP)
+    $io.emit('add ip', ip || $scope.newIP)
     $scope.newIP = ''
   }
 
@@ -66,5 +99,13 @@ function SettingsCtrl($scope, $rootScope, $io) {
     this.blacklist.push($scope.newRude)
     $io.emit('add rude', $scope.newRude)
     $scope.newRude = ''
+  }
+
+  $scope.ban = function(idx) {
+    var user = $scope.users[idx]
+    $scope.users.splice(idx, 1)
+
+    $scope.addIP(user.ip)
+    $io.emit('ban', user.name)
   }
 }

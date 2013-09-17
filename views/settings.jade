@@ -1,6 +1,7 @@
 !!! 5
 html(ng-app='ca', ng-controller='SettingsCtrl')
   head
+    title Chat panel
     link(rel='stylesheet', href='//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap.min.css')
     link(rel='stylesheet', href='css/app.css')
     script(src='//ajax.googleapis.com/ajax/libs/angularjs/1.0.8/angular.min.js', type='application/javascript')
@@ -18,23 +19,9 @@ html(ng-app='ca', ng-controller='SettingsCtrl')
         h3.pull-left Chat settings
         h3.pull-right.text-error Online:
           | &nbsp;
-          strong {{usersCount - 1}}
+          strong {{users.length}}
       .span6
-        h4 Pending URL domains
-        table.table.table-bordered
-          thead
-            th ID
-            th URL
-            th Actions
-          tbody
-            tr(ng-repeat='pending in pendingURLs')
-              td {{pending.id}}
-              td {{pending.domain | cut:60}}
-              td
-                a.btn.btn-success(ng-click='approve($index)') Approve
-            tr(ng-show='!pendingURLs.length')
-              td(colspan='3') No pending
-        h4 Allowed domains URLs
+        h4 Allowed URL domains
         table.table.table-bordered
           thead
             th Domain
@@ -45,33 +32,33 @@ html(ng-app='ca', ng-controller='SettingsCtrl')
               td
                 a.btn.btn-danger(ng-click='removeDomain($index)') Remove
             tr(ng-show='!allowedURLDomains.length')
-              td(colspan='3') No pending URLS
+              td(colspan='3') No URL domains defined
 
         .input-append
           input(ng-model='newDomain', type='text')
-          a.btn.btn-success(ng-click='addDomain()') Add IP
-
-        h4 Banned IP addresses
+          a.btn.btn-success(ng-click='addDomain()') Add domain
+        h4 Domains allowed to run chat
         table.table.table-bordered
           thead
-            th IP
-            th Action
+            th Domain
+            th Actions
           tbody
-            tr(ng-repeat='ip in bannedIPs')
-              td {{ip}}
+            tr(ng-repeat='domain in allowedDomains')
+              td {{domain | cut:60}}
               td
-                a.btn.btn-danger(ng-click='removeIP($index)') Remove
-            tr(ng-show='!blacklist.length')
-              td(colspan='3') No IPs in banlist
+                a.btn.btn-danger(ng-click='removeAllowed($index)') Remove
+            tr(ng-show='!allowedDomains.length')
+              td(colspan='3') No allowed domains, your chat won't work anywhere! :)
+
         .input-append
-          input(ng-model='newIP', type='text')
-          a.btn.btn-success(ng-click='addIP()') Add IP
+          input(ng-model='newAllowed', type='text')
+          a.btn.btn-success(ng-click='addAllowed()') Add domain
       .span6
         h4 Blacklist
         table.table.table-bordered
           thead
             th Text
-            th Action
+            th Actions
           tbody
             tr(ng-repeat='rude in blacklist')
               td {{rude}}
@@ -96,8 +83,6 @@ html(ng-app='ca', ng-controller='SettingsCtrl')
         input(type='text', ng-model='bitlyLogin')
         h5 Bit.ly API key:
         input(type='text', ng-model='bitlyKey')
-        h5 Allowed domains (comma-separated):
-        input(type='text', ng-model='allowedDomains')
         h5 Chat width:
         .input-append
           input(type='number', ng-model='chatWidth', min='400')
@@ -106,8 +91,38 @@ html(ng-app='ca', ng-controller='SettingsCtrl')
         .input-append
           input(type='number', ng-model='chatHeight', min='100')
           span.add-on px
-        h5 Allowed domains (comma-separated):
-        input(type='text', ng-model='allowedDomains')
+      .clearfix
+      .span6
+        h4 Users
+        table.table.table-bordered
+          thead
+            th User name
+            th IP
+            th Actions
+          tbody
+            tr(ng-repeat='user in users | orderBy:name')
+              td {{user.name}}
+              td {{user.ip}}
+              td
+                a.btn.btn-danger(ng-click='ban($index)') Ban
+            tr(ng-show='!users.length')
+              td(colspan='3') No online users
+      .span6
+        h4 Banned IP addresses
+        table.table.table-bordered
+          thead
+            th IP
+            th Actions
+          tbody
+            tr(ng-repeat='ip in bannedIPs')
+              td {{ip}}
+              td
+                a.btn.btn-danger(ng-click='removeIP($index)') Remove
+            tr(ng-show='!bannedIPs.length')
+              td(colspan='3') No IPs in banlist
+        .input-append
+          input(ng-model='newIP', type='text')
+          a.btn.btn-success(ng-click='addIP()') Add IP
 
 
 

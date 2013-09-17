@@ -64,6 +64,13 @@ function User(manager, socket) {
   } else {
     addr = socket.handshake.address.address
   }
+
+  /**
+   * IP of user
+   *
+   * @type {string}
+   */
+  this.ip = addr
   geoip.applyTo(this, addr)
 }
 
