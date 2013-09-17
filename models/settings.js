@@ -42,7 +42,10 @@ function SettingsManager(config) {
 
     self.changed = false
     var configPath = path.join(__dirname, '../config.json')
-    fs.writeFile(configPath, JSON.stringify(self.serialize(), null, ' '), function(err) {
+      , out = self.serialize()
+
+    out.usersCount = 0
+    fs.writeFile(configPath, JSON.stringify(out, null, ' '), function(err) {
       if (err) console.error(err)
     })
   }, 5000)
