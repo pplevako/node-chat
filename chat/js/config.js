@@ -2,7 +2,7 @@
 
 define([], function() {
   return {
-    baseUrl:            'http://127.0.0.1:3000/',
+    baseUrl:            'http://murmuring-plains-2912.herokuapp.com/',
     chatRootSelector:   '#chat',
     lockTimeout:         400,
     mainChatLabel:       'Main',
