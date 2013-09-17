@@ -43,14 +43,17 @@ define([
     })
 
     function coolDown() {
+      // if already counting
+      if ($scope.interval) return
+
       $scope.blocked = Math.ceil($scope.coolDownTimeout / 1000)
 
-      var interval = setInterval(function() {
+      $scope.interval = setInterval(function() {
         $rootScope.$apply(function() {
           $scope.blocked--
 
           if (!$scope.blocked) {
-            clearInterval(interval)
+            clearInterval($scope.interval)
           }
         })
 
