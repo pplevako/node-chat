@@ -15,12 +15,19 @@ Install all required Node.js modules and update GeoIP databases:
 Server configuration
 --------------------
 
-For server-side you only need to set HTTP server port. You can do it by setting `port` property in `config.json`:
+For server-side you only need to set server port and admin credentials.
+You can do it by setting `port` property in `config.json`:
 
 ```javascript
 {
   // Chat application server will listen on this port
   "port": 1337,
+
+  // When you access /admin, HTTP basic authentication will ask to login
+  "admin": {
+    "user": "admin",
+    "password": "admin"
+  },
 
   // ... other settings which can be managed from chat admin panel
 }
@@ -86,4 +93,4 @@ If you like to override HTTP port setting, just add `PORT` environment variable 
 Administration panel
 --------------------
 
-Chat admin panel is located at `http://CHAT-APP-HOST:PORT/admin/`.
+Chat admin panel is located at `http://CHAT-APP-HOST:PORT/admin`.

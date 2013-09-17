@@ -177,7 +177,7 @@ SettingsManager.prototype.serialize = function() {
   var out = {}
 
   var keys = [
-    'port', 'allowedDomains', 'blacklist', 'bannedIPs', 'chatWidth',
+    'port', 'admin', 'allowedDomains', 'blacklist', 'bannedIPs', 'chatWidth',
     'chatHeight', 'allowedURLDomains', 'bitlyLogin', 'bitlyKey',
     'coolDownTimeout', 'maxMessagesPerMin', 'savedMessagesCount'
   ]

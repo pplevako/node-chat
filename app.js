@@ -21,6 +21,8 @@ app.configure('all', function() {
   })
 
   app.use(express.static(path.join(__dirname, 'chat')))
+
+  app.use('/admin', express.basicAuth(config.admin.user, config.admin.password))
   app.use('/admin', express.static(path.join(__dirname, 'admin')))
 
   /** Router after static */
