@@ -5,6 +5,7 @@ var BlockError = require('../shared/errors').BlockError
   , q = require('q')
   , urlParse = require('url').parse
   , settingsManager = require('./settings')
+  , shorturl = require('shorturl')
   , SpamError = require('../shared/errors').SpamError
   , URL_REGEXP = new RegExp('(http[s]?:\\/\\/(www\\.)?|ftp:\\/\\/(www\\.)?|www\\.)?([0-9A-Za-z-\\.@:%_+~#=]+)+((\\.[a-zA-Z]{2,4})+)(/(.)*)?(\\?([^ ])+)?', 'g')
 
@@ -166,21 +167,40 @@ Validator.prototype.rename = function(user, newName) {
  */
 Validator.prototype.validateLinks = function(user, message) {
   var settingsManager = this.settingsManager
+    , deferred = q.defer()
+    , urls = []
 
-  return message.replace(URL_REGEXP, function(url) {
+  message.replace(URL_REGEXP, function(url) {
     if (url.indexOf('http') !== 0 && url.indexOf('ftp:') !== 0) {
       url = 'http://' + url
     }
 
-    console.log(url)
     var parsed = urlParse(url)
-
     if (!~settingsManager.allowedURLDomains.indexOf(parsed.hostname)) {
       return '***'
     } else {
-      return '<a href="' + encodeURI(url) + '" target="_blank">' + url + '</a>'
+      if (!~urls.indexOf(url)) {
+        urls.push(url)
+      }
+
+      return url
     }
   })
+
+  +function iterate() {
+    if (!urls.length) return deferred.resolve(message)
+    var url = urls.shift()
+
+    shorturl(url, 'bit.ly', {
+      login:  settingsManager.bitlyLogin,
+      apiKey: settingsManager.bitlyKey
+    }, function(tinyURL) {
+      message = message.replace(url, '<a href="' + tinyURL + '" target="_blank">' + tinyURL + '</a>')
+      iterate()
+    })
+  }()
+
+  return deferred.promise;
 }
 
 
