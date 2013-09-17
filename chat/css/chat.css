@@ -6,8 +6,33 @@ body {
   position: relative;
 }
 
-.chat-app .panel-body {
+.chat-app .nav-tabs, .chat-app .panel, .chat-app .nav-tabs li.active a {
+  border-color: #dddddd;
+}
+
+.chat-app .nav-tabs li.active a {
+  border-bottom-color: transparent;
+}
+
+.chat-app .nav-tabs li a img {
+  vertical-align: middle;
+  margin-bottom: 3px;
+  cursor: pointer;
+}
+
+.chat-app .nav-tabs li:first-child {
+  margin-left: 5px;
+}
+
+
+.chat-app .bg {
   background-color: #fafafa;
+  position: absolute;
+  top: 1px;
+  left: 1px;
+}
+
+.chat-app .panel-body {
   overflow: visible;
 }
 

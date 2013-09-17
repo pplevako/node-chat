@@ -13,10 +13,13 @@ define([
       $scope.show = !$scope.show
     })
 
-    $(document).mouseup(function(e) {
-      var container = angular.element();
+    angular.element(document).mouseup(function(e) {
+      var container = angular.element($element)
+        , $el = angular.element(e.target)
 
-      if (!container.is(e.target) && container.has(e.target).length === 0) {
+      if ($el.hasClass('btn-smiles') || $el.parent().hasClass('btn-smiles')) {
+        return
+      } else if (!container.is(e.target) && container.has(e.target).length === 0) {
         $rootScope.$apply(function() {
           $scope.show = false
         })
