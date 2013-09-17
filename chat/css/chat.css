@@ -2,7 +2,7 @@ body {
   margin-top: 40px;
 }
 
-.chat-app .row {
+.chat-app {
   position: relative;
 }
 
@@ -10,7 +10,7 @@ body {
   overflow: visible;
 }
 
-.chat-app .row .blocker {
+.chat-app .blocker {
   position: absolute;
   z-index: 100500;
   width: 100%;
