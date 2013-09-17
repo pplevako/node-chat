@@ -7,7 +7,7 @@
  */
 module.exports = function(app) {
   // render settings page
-  app.get('/admin', function(req, res) {
+  app.get('/admin/', function(req, res) {
     res.render('settings')
   })
 }
