@@ -102,14 +102,13 @@ Validator.prototype.message = function(user, message) {
       }
     })
     .then(function checkForRudeWords() {
-      /*if (!self.validateMessage(user, message)) {
+      if (message !== self.validateMessage(user, message)) {
         self.block(user)
 
         throw new BlockError('You tried to post rude word! Now you\'re blocked! :P')
-      }*/
-      return self.validateMessage(user, message)
+      }
     })
-    .then(function checkForLinks(message) {
+    .then(function checkForLinks() {
       return self.validateLinks(user, message)
     })
 }
