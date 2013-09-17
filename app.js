@@ -19,7 +19,7 @@ app.configure('all', function() {
   app.use(express.session())
   app.use(app.router)
 
-  app.use('/chat', express.static(path.join(__dirname, 'chat')))
+  app.use(express.static(path.join(__dirname, 'chat')))
   app.use('/admin', express.static(path.join(__dirname, 'admin')))
 })
 
