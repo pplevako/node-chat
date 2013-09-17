@@ -1,11 +1,13 @@
 define([
+  'config',
+  'jquery',
   'angular',
   'angular-sanitize',
   'controllers',
   'directives',
   'filters',
   'services'
-], function(angular, sanitize, controllers) {
+], function(angular, sanitize, config, controllers) {
   function initialize() {
     var app = angular.module('chat', ['ngSanitize', 'chat.directives', 'chat.filters', 'chat.services'])
 
@@ -16,7 +18,7 @@ define([
       }
     }
 
-    angular.bootstrap(document.getElementById('chat'), ['chat'])
+    angular.bootstrap($(config.chatRootSelector)[0], ['chat'])
   }
 
   return {
