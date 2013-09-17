@@ -54,6 +54,7 @@ define([
 
           if (!$scope.blocked) {
             clearInterval($scope.interval)
+            delete $scope.interval
           }
         })
 
