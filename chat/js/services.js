@@ -1,10 +1,14 @@
 'use strict'
 
-define(['angular', 'socket.io'], function(angular, io) {
+define([
+  'angular',
+  'config',
+  'socket.io'
+], function(angular, config, io) {
   var services = angular.module('chat.services', [])
 
   services.factory('$io', function($rootScope) {
-    var socket = io.connect('/chat')
+    var socket = io.connect(config.baseUrl + 'chat')
 
     return {
       on: function(eventName, callback) {
