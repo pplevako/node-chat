@@ -27,9 +27,13 @@ function Validator(settingsManager) {
  * Mark user as blocked
  *
  * @param {User} user User instance
+ * @param {string} [reason] Reason of blocking
  */
-Validator.prototype.block = function(user) {
+Validator.prototype.block = function(user, reason) {
   user.blockedAt = Date.now()
+  if (reason) {
+    user.socket.emit('block', reason)
+  }
 }
 
 
@@ -102,13 +106,14 @@ Validator.prototype.message = function(user, message) {
       }
     })
     .then(function checkForRudeWords() {
-      if (message !== self.validateMessage(user, message)) {
-        self.block(user)
-
-        throw new BlockError('You tried to post rude word! Now you\'re blocked! :P')
+      var msg = self.validateMessage(user, message)
+      if (msg !== message) {
+        self.block(user, 'You tried to post rude word! Now you\'re blocked! :P')
       }
+
+      return msg
     })
-    .then(function checkForLinks() {
+    .then(function checkForLinks(message) {
       return self.validateLinks(user, message)
     })
 }
