@@ -7,7 +7,7 @@ define([
   'directives',
   'filters',
   'services'
-], function(angular, sanitize, config, controllers) {
+], function(config, $, angular, sanitize, controllers) {
   function initialize() {
     var app = angular.module('chat', ['ngSanitize', 'chat.directives', 'chat.filters', 'chat.services'])
 
