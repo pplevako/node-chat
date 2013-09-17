@@ -1,8 +1,9 @@
 'use strict'
 
 define([
+  'config',
   'utils'
-], function(utils) {
+], function(config, utils) {
 
   function MainCtrl($scope, $rootScope, $io) {
     $rootScope.me = {
@@ -11,6 +12,16 @@ define([
       state: '',
       city: ''
     }
+
+    $scope.displayValue = function() {
+      if ($rootScope.me.name === '') {
+        return 'none'
+      } else {
+        return 'block'
+      }
+    }
+
+    $rootScope.baseUrl = config.baseUrl || ''
 
     this.registerIOListeners($scope, $rootScope, $io)
   }
