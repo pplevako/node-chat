@@ -10,11 +10,8 @@ body {
   overflow: visible;
 }
 
-.chat-app .blocker {
-  position: absolute;
-  z-index: 100500;
-  width: 100%;
-  height: 100%;
+.chat-app .cooldown {
+  height: 21px;
 }
 
 .chat-app .messages {

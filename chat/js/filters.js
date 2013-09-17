@@ -2,19 +2,31 @@
 
 define(['angular'], function(angular) {
   var filters = angular.module('chat.filters', [])
-  /*filters.filter('userSort', function($rootScope) {
-    return function(users) {
-      var cities = []
-        , states = []
-        , countries = []
-        , names = []
+  filters.filter('interval', function() {
+    return function(seconds) {
+      var mins = Math.floor(seconds / 60)
+      seconds -= mins * 60
 
-      var me
-      if ($rootScope.me) {
-        me = $rootScope.me
+      var str = ''
+      if (!mins) {
+        str += '00'
+      } else if (mins < 10) {
+        str += '0' + mins
       } else {
-        $rootScope.me
+        str += mins
       }
+
+      str += ':'
+
+      if (!seconds) {
+        str += '00'
+      } else if (seconds < 10) {
+        str += '0' + seconds
+      } else {
+        str += seconds
+      }
+
+      return str
     }
-  })*/
+  })
 })

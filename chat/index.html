@@ -37,11 +37,6 @@
           </div>
         </div>
 
-
-          <span class="btn btn-danger disabled blocker" ng-show="blocked">
-            <h3>Time to cool down: {{ blocked }}</h3>
-          </span>
-
         <div class="panel-body container">
           <div class="row">
             <div class="col-md-8">
@@ -57,15 +52,19 @@
                   </li>
                 </ul>
 
-                <div class="tab-content messages" ng-style="{height: chatHeight - 121 + 'px'}">
+                <div class="tab-content messages" ng-style="{height: chatHeight - 152.5 + 'px'}">
                   <div class="tab-pane" ng-class="{active: (current == chat)}" ng-repeat="chat in chats">
-                    <p ng-class="messageClass(msg.type)" ng-repeat="msg in chat.messages" ng-bind-html-unsafe="(msg.date|date:'yyyy/MM/dd HH:mm:ss') + '&nbsp;' + messageString(msg)">
+                    <p ng-class="messageClass(msg.type)" ng-repeat="msg in chat.messages" ng-bind-html-unsafe="(msg.date|date:'mm:ss') + '&nbsp;' + messageString(msg)">
                     </p>
                   </div>
                 </div>
               </div>
 
               <!-- message box -->
+              <p class="cooldown text-danger">
+                  <span ng-show="blocked">Cool down {{ blocked|interval }} minutes.</span>
+              </p>
+
               <div class="message-box" ng-controller="MessageCtrl">
                 <form ng-submit="send()" class="input-group">
                 <span class="input-group-btn">
