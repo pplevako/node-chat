@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "build-client": "node scripts/gen-template.js && cd chat/js && ../../node_modules/.bin/r.js -o baseUrl=. name=../lib/require.js/almond include=main mainConfigFile=main.js",
+    "build-template": "node scripts/gen-template.js",
     "postinstall": "node node_modules/geoip-lite/scripts/updatedb.js",
     "start": "node app.js"
   },

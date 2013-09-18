@@ -20,13 +20,13 @@ app.configure('all', function() {
     settingsManager.validateReferer(req, res, next)
   })
 
+
+  /** Static after routes */
+  app.use(app.router)
   app.use(express.static(path.join(__dirname, 'chat')))
 
   app.use('/admin', express.basicAuth(config.admin.user, config.admin.password))
   app.use('/admin', express.static(path.join(__dirname, 'admin')))
-
-  /** Router after static */
-  app.use(app.router)
 })
 
 require('./routes/http')(app)
