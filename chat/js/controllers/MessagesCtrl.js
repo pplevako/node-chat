@@ -73,7 +73,7 @@ define([
         var messages = $(config.messagesSelector).children()[idx]
           , message = $(messages).children()[length-1]
 
-        $(message).emoticonize({
+        $(message).find('span.message').emoticonize({
           animate: true
         })
 
@@ -196,7 +196,7 @@ define([
       } else {
         str.push('<span class="user">&gt;', msg.from, '</span>')
         str.push(':&nbsp;')
-        str.push(msg.text)
+        str.push('<span class="message">', msg.text, '</span>')
       }
 
       return str.join('')
