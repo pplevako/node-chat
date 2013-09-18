@@ -98,6 +98,16 @@ Development
 
 To test the chat you can access it using `http://CHAT-HOST:PORT/`. This will load not minified version of chat client, so you can debug it.
 
+### Minified client compilation
+
+Minified app version is built by [r.js](https://github.com/jrburke/r.js/). Build configuration is located at `chat/js/main.js`. When you run `npm run-script build-client`, following commands are performed:
+
+```bash 
+node scripts/gen-template.js # same as 'npm run-script build-template'
+cd chat/js
+../../node_modules/.bin/r.js -o baseUrl=. name=../lib/require.js/almond include=main mainConfigFile=main.js
+```
+
 ### Working with template
 
 Layout template is located at `chat/index.html`. There is npm task `build-template` which creates `chat/js/template.js` from this file. To say it just minifies HTML and wraps result string into AMD module.
