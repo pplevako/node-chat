@@ -33,6 +33,7 @@
             <li ng-class="{active: (current == chat), bold: chat.hasNew}" ng-click="setCurrent(chat)" ng-repeat="chat in chats">
               <a>
                 {{ chat.name }}
+                &nbsp;
                 <img ng-src="{{ baseUrl }}img/close.png" ng-click="close(chat)" ng-show="$index"/>
               </a>
             </li>

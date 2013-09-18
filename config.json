@@ -5,9 +5,8 @@
   "password": "admin"
  },
  "allowedDomains": [
-  "127.0.0.1:3000",
-  "127.0.0.1:5000",
-  "192.168.56.101:5000"
+   "www.ssega.com",
+   "www.ssega.com:3000"
  ],
  "blacklist": [
   "fuck",
@@ -20,8 +19,7 @@
  "chatWidth": 900,
  "chatHeight": 450,
  "allowedURLDomains": [
-  "google.com",
-  "ya.ru"
+  "www.ssega.com"
  ],
  "bitlyLogin": "liberitas",
  "bitlyKey": "R_5784b8d2a65281bcab1151993f527595",

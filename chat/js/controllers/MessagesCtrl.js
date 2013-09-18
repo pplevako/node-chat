@@ -47,8 +47,8 @@ define([
     $rootScope.current = $scope.chats[0]
 
     this.addScopeMethods($scope, $rootScope)
-    this.registerScopeListeners($scope, $rootScope)
-    this.registerIOListeners($scope, $io)
+    this.registerScopeListeners($scope)
+    this.registerIOListeners($scope, $rootScope, $io)
 
   }
 
@@ -258,7 +258,14 @@ define([
 
 
 
-  MessagesCtrl.prototype.registerScopeListeners = function($scope, $rootScope) {
+  MessagesCtrl.prototype.registerScopeListeners = function($scope) {
+    $scope.$on('rename', function(event, data) {
+      var chat = $scope.getChat(data.oldName)
+      if (chat) {
+        chat.name = data.newName
+      }
+    })
+
     $scope.$on('start private', function(event, name) {
       var chat = $scope.getChat(name)
       if (chat) {
@@ -267,27 +274,12 @@ define([
         $scope.startPrivate(name)
       }
     })
-
-    $scope.$on('private message sent', function(event, message, to) {
-      var data = [null, $rootScope.me.name, message, Date.now()]
-        , msgObject = utils.toMessageObject(data)
-        , chat = $scope.getChat(to)
-
-      $scope.addMessage(chat, msgObject)
-    })
-
-    $scope.$on('rename', function(event, data) {
-      var chat = $scope.getChat(data.oldName)
-      if (chat) {
-        chat.name = data.newName
-      }
-    })
   }
 
 
 
 
-  MessagesCtrl.prototype.registerIOListeners = function($scope, $io) {
+  MessagesCtrl.prototype.registerIOListeners = function($scope, $rootScope, $io) {
     /** Global chat history received */
     $io.on('history', function(history) {
       var mainChat = $scope.getChat(config.mainChatLabel)
@@ -317,6 +309,15 @@ define([
       } else {
         $scope.startPrivate(from, msgObject)
       }
+    })
+
+    /** Private message sent by this user (message back) */
+    $io.on('private message sent', function(message, to) {
+      var data = [null, $rootScope.me.name, message, Date.now()]
+        , msgObject = utils.toMessageObject(data)
+        , chat = $scope.getChat(to)
+
+      $scope.addMessage(chat, msgObject)
     })
   }
 

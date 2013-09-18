@@ -28,9 +28,6 @@ define([
             $io.emit('message', message)
           } else {
             $io.emit('private message', message, to)
-
-            // notify MessagesCtrl that we sent private message
-            $rootScope.$broadcast('private message sent', message, to)
           }
 
           $scope.message = ''

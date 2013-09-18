@@ -107,6 +107,8 @@ User.prototype.onMessage = function(message) {
  */
 User.prototype.onPrivateMessage = function(message, to) {
   this.manager.privateMessage(this.name, to, message)
+
+  this.socket.emit('private message sent', message, to)
 }
 
 
