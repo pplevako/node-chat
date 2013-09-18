@@ -78,6 +78,7 @@ Once you've edited this file you can build minified client application:
 
 Now you can start your app.
 
+
 Start
 -----
 
@@ -89,6 +90,33 @@ If you like to override HTTP port setting, just add `PORT` environment variable 
 
 `PORT=8080 node app.js`
 
+
+Development
+-----------
+
+### Debugging client application
+
+To test the chat you can access it using `http://CHAT-HOST:PORT/`. This will load not minified version of chat client, so you can debug it.
+
+### Minified client compilation
+
+Minified app version is built by [r.js](https://github.com/jrburke/r.js/). Build configuration is located at `chat/js/main.js`. When you run `npm run-script build-client`, following commands are performed:
+
+```bash 
+node scripts/gen-template.js # same as 'npm run-script build-template'
+cd chat/js
+../../node_modules/.bin/r.js -o baseUrl=. name=../lib/require.js/almond include=main mainConfigFile=main.js
+```
+
+### Working with template
+
+Layout template is located at `chat/index.html`. There is npm task `build-template` which creates `chat/js/template.js` from this file. To say it just minifies HTML and wraps result string into AMD module.
+
+Also `npm run-script build-client` runs `build-template`, so minified client gets all the layout updates.
+
+### CSS
+
+All the CSS is located at `chat/css/`. If you see CSS is messed up on your external page where you run chat, you should edit chat CSS files somehow, so they only reflect elements which are under `.chat-app` (I did not found a way to insert .chat-app prefix to every CSS rule).
 
 Administration panel
 --------------------
