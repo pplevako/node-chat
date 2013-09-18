@@ -10,7 +10,8 @@ define([
       name: '',
       country: '',
       state: '',
-      city: ''
+      city: '',
+      ll: []
     }
 
     $scope.displayValue = function() {

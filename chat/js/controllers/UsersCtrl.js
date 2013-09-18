@@ -1,24 +1,15 @@
 'use strict'
 
 define([], function() {
-  function UsersCtrl($scope, $rootScope, $io) {
+  function UsersCtrl($scope, $rootScope, $io, geoDistance) {
     $scope.users = []
 
     $io.on('users', function(users) {
       $scope.users = users
+        users.forEach(function(user) {
+            user.distance = geoDistance.distance($rootScope.me.ll, user.ll)
+        });
     })
-
-    $scope.orderMeCity = function(user) {
-        return !(user.city === $rootScope.me.city)
-    }
-
-    $scope.orderMeCountry = function(user) {
-        return !(user.country === $rootScope.me.country)
-    }
-
-    $scope.orderMeState = function(user) {
-        return !(user.state === $rootScope.me.state)
-    }
 
       $scope.getUser = function(name) {
       var i = 0
@@ -50,6 +41,7 @@ define([], function() {
     /* New one connected */
     $scope.$on('new-user', function(event, user) {
       if (!$scope.getUser(user.name) && user.name !== $rootScope.me.name) {
+        user.distance = geoDistance.distance($rootScope.me.ll, user.ll)
         $scope.users.push(user)
       }
     })

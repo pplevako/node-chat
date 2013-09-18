@@ -7,6 +7,14 @@ define([
 ], function(angular, config, io) {
   var services = angular.module('chat.services', [])
 
+  services.factory('geoDistance', function() {
+      return {
+        distance: function(ll1, ll2) {
+            return (ll2[0] - ll1[0])*(ll2[0] - ll1[0]) + (ll2[1] - ll1[1])*(ll2[1] - ll1[1])
+        }
+      }
+  })
+
   services.factory('$io', function($rootScope) {
     var socket = io.connect(config.baseUrl + 'chat')
 

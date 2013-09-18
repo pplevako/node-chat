@@ -13,6 +13,7 @@ exports.applyTo = function(obj, address) {
   obj.country = lookup.country
   obj.state = lookup.region
   obj.city = lookup.city
+  obj.ll = lookup.ll
 
   return true
 }

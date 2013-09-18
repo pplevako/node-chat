@@ -68,7 +68,7 @@
         <p> Users in chat:<strong>{{ users.length + 1 }}</strong>
         </p>
         <ul ng-style="{height: (chatHeight - 70) + 'px'}">
-          <li ng-show="user.name != me.name" ng-repeat="user in users | orderBy:[orderMeCountry, orderMeState, orderMeCity, 'country', 'state', 'city']">
+          <li ng-show="user.name != me.name" ng-repeat="user in users | orderBy: 'distance'">
             <a ng-click="startPrivate(user)">&gt;{{ user.name }}</a>
             ({{ locationString(user) }})
           </li>

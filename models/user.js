@@ -152,6 +152,7 @@ User.prototype.serialize = function() {
   out.country = this.country
   out.state = this.state
   out.city = this.city
+  out.ll = this.ll
 
   return out
 }
