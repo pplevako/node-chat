@@ -72,7 +72,7 @@ Users.prototype.create = function(socket) {
     user.name,
     user.name + ' entered chat',
     'new-user',
-    user.serialize())
+    user.serialize(), settingsManager.silentUserEnterLeave)
 
   settingsManager.emit('user added', {
     name: user.name,
@@ -93,7 +93,7 @@ Users.prototype.create = function(socket) {
 Users.prototype.deleteByName = function(name) {
   delete this.users[name]
 
-  this.message(name, name + ' left', 'dead-user', name)
+  this.message(name, name + ' left', 'dead-user', {name: name}, settingsManager.silentUserEnterLeave)
 
   // notify admin page
   settingsManager.emit('user deleted', name)
@@ -123,21 +123,21 @@ Users.prototype.getByName = function(name) {
  * @param {string} type Message type
  * @param {*} [extra] Extra data, whatever
  */
-Users.prototype.message = function(sender, message, type, extra) {
+Users.prototype.message = function(sender, message, type, extra, silent) {
   var msg = [type, sender, message, Date.now()]
-  if (extra) msg.push(extra)
-
-  if (this.history.length >= settingsManager.savedMessagesCount) {
-    var calls = this.history.length - settingsManager.savedMessagesCount
-    while (calls--) this.history.shift()
+  if (extra)
+    msg.push(extra)
+  if (silent) {
+    extra.silent = silent
+  } else {
+    if (this.history.length >= settingsManager.savedMessagesCount) {
+      var calls = this.history.length - settingsManager.savedMessagesCount
+      while (calls--) this.history.shift()
+    }
+    this.history.push(msg)
   }
-
-  this.history.push(msg)
   this.io.emit('message', msg)
 }
-
-
-
 
 /**
  * Private message from one user to another

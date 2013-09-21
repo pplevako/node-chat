@@ -15,6 +15,7 @@ define([
     }
 
     $scope.displayValue = function() {
+      if ($scope.hidden) return 'none'
       if ($rootScope.me.name === '') {
         return 'none'
       } else {

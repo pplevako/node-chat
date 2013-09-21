@@ -295,8 +295,10 @@ define([
       var mainChat = $scope.getChat(config.mainChatLabel)
         , message = utils.toMessageObject(data)
 
-      $scope.addMessage(mainChat, message)
       $scope.addToPrivate(message)
+      if (message.extra && message.extra.silent)
+        return
+      $scope.addMessage(mainChat, message)
     })
 
     /** Private message received */

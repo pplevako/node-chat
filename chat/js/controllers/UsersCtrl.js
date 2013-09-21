@@ -52,7 +52,7 @@ define([], function() {
         , user
 
       while (user = $scope.users[i]) {
-        if (user.name === name) {
+        if (user.name === name.name) {
           $scope.users.splice(i, 1)
           break
         }

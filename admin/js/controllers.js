@@ -6,7 +6,7 @@ function SettingsCtrl($scope, $rootScope, $io) {
       $rootScope.$apply(function() {
         if (!~['allowedDomains', 'users', 'blacklist', 'bannedIPs'].indexOf(prop)) {
           $scope.$watch(prop, function(value) {
-            if (!value) return
+            if (typeof value === 'undefined') return
             $io.emit('update', prop, value)
           })
         }

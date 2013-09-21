@@ -179,7 +179,8 @@ SettingsManager.prototype.serialize = function() {
   var keys = [
     'port', 'admin', 'allowedDomains', 'blacklist', 'bannedIPs', 'chatWidth',
     'chatHeight', 'allowedURLDomains', 'bitlyLogin', 'bitlyKey',
-    'coolDownTimeout', 'maxMessagesPerMin', 'savedMessagesCount'
+    'coolDownTimeout', 'maxMessagesPerMin', 'savedMessagesCount',
+    'hidden', 'disabled', 'silentUserEnterLeave'
   ]
   keys.forEach(function(key) {
     out[key] = this[key]
@@ -219,7 +220,9 @@ SettingsManager.prototype.userSettings = function() {
   return {
     'chatWidth':       this.chatWidth,
     'chatHeight':      this.chatHeight,
-    'coolDownTimeout': this.coolDownTimeout
+    'coolDownTimeout': this.coolDownTimeout,
+    'hidden': this.hidden,
+    'disabled': this.disabled
   }
 }
 
