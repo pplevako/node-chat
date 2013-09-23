@@ -54,7 +54,7 @@
             <span class="input-group-btn">
               <a class="btn btn-default" ng-click="changeName()">&gt;{{ me.name }}</a>
             </span>
-            <input class="form-control" type="text" placeholder="Type message..." ng-disabled="disabled || blocked" ng-model="message"/>
+            <input class="form-control" type="text" placeholder="Type message..." ng-disabled="chatDisabled || disabled || blocked" ng-model="message"/>
             <span class="input-group-addon btn btn-smiles" ng-click="showSmiles()">
               <img ng-src="{{ baseUrl }}img/smile.png"/>
             </span>

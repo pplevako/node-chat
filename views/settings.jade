@@ -22,8 +22,8 @@ html(ng-app='ca', ng-controller='SettingsCtrl')
           strong {{users.length}}
       .span6
         h4 Millennium Falcon controls
-        h5 Enabled:&nbsp;
-            input(type='checkbox',ng-model='disabled')
+        h5 Disabled:&nbsp;
+            input(type='checkbox',ng-model='chatDisabled')
         h5 Hidden:&nbsp;
             input(type='checkbox',ng-model='hidden')
         h5 Don't show user join/left messages:&nbsp;

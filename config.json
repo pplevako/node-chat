@@ -27,6 +27,6 @@
  "maxMessagesPerMin": 10,
  "savedMessagesCount": 100,
  "hidden": false,
- "disabled": true,
+ "chatDisabled": false,
  "silentUserEnterLeave": true
 }

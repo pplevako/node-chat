@@ -74,4 +74,8 @@ module.exports = function(io) {
       socket.on('rename', renameRequest)
       socket.on('disconnect', userDisconnected)
     })
+
+    settingsManager.on('user settings update', function() {
+        io.emit('settings', settingsManager.userSettings())
+    })
 }
