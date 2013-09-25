@@ -6,12 +6,8 @@ var config = require('../config')
   , path = require('path')
   , q = require('q')
   , urlParse = require('url').parse
+  , User = require('./user')
   , util = require('util')
-
-
-function generateId() {
-  return (Date.now() * Math.random()).toString(16).split('.')[0]
-}
 
 
 
@@ -47,7 +43,14 @@ function SettingsManager(config) {
     fs.writeFile(configPath, JSON.stringify(out, null, ' '), function(err) {
       if (err) console.error(err)
     })
-  }, 5000)
+  }, 2000)
+
+  /**
+   * Ref to users manager instance
+   *
+   * @type {Users}
+   */
+  this.users = null
 }
 util.inherits(SettingsManager, EventEmitter)
 
@@ -171,17 +174,27 @@ SettingsManager.prototype.removeRude = function(idx) {
 
 
 /**
+ * Reset chat history, list of users, etc.
+ */
+SettingsManager.prototype.resetChat = function() {
+  User.reset()
+  this.users.resetHistory()
+}
+
+
+
+
+/**
  * Serialize
  */
 SettingsManager.prototype.serialize = function() {
   var out = {}
-
-  var keys = [
-    'port', 'admin', 'allowedDomains', 'blacklist', 'bannedIPs', 'chatWidth',
-    'chatHeight', 'allowedURLDomains', 'bitlyLogin', 'bitlyKey',
-    'coolDownTimeout', 'maxMessagesPerMin', 'savedMessagesCount',
-    'hidden', 'chatDisabled', 'silentUserEnterLeave'
-  ]
+    , keys = [
+      'port', 'admin', 'allowedDomains', 'blacklist', 'bannedIPs', 'chatWidth',
+      'chatHeight', 'allowedURLDomains', 'bitlyLogin', 'bitlyKey',
+      'coolDownTimeout', 'maxMessagesPerMin', 'savedMessagesCount',
+      'hidden', 'chatDisabled', 'silentUserEnterLeave'
+    ]
   keys.forEach(function(key) {
     out[key] = this[key]
   }, this)
@@ -224,8 +237,8 @@ SettingsManager.prototype.userSettings = function() {
     'chatWidth':       this.chatWidth,
     'chatHeight':      this.chatHeight,
     'coolDownTimeout': this.coolDownTimeout,
-    'hidden': this.hidden,
-    'chatDisabled': this.chatDisabled
+    'hidden':          this.hidden,
+    'chatDisabled':    this.chatDisabled
   }
 }
 

@@ -2,32 +2,73 @@
 html(ng-app='ca', ng-controller='SettingsCtrl')
   head
     title Chat panel
-    link(rel='stylesheet', href='//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap.min.css')
-    link(rel='stylesheet', href='/admin/css/app.css')
+    link(href='//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css', rel='stylesheet', type='text/css')
+    link(href='/admin/css/app.css', rel='stylesheet', type='text/css')
+    script(src='//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js', type='application/javascript')
     script(src='//ajax.googleapis.com/ajax/libs/angularjs/1.0.8/angular.min.js', type='application/javascript')
+    script(src='//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js', type='application/javascript')
     script(src='/socket.io/socket.io.js', type='application/javascript')
-    script(src='//angular-ui.github.com/bootstrap/ui-bootstrap-tpls-0.6.0.js', type='application/javascript')
     script(src='/admin/js/app.js', type='application/javascript')
     script(src='/admin/js/controllers.js', type='application/javascript')
     script(src='/admin/js/directives.js', type='application/javascript')
     script(src='/admin/js/filters.js', type='application/javascript')
     script(src='/admin/js/services.js', type='application/javascript')
   body
-    .clearfix
-    .container-fluid
-      .row-fluid
+    .col-lg-12
+      .col-lg-12
         h3.pull-left Chat settings
         h3.pull-right.text-error Online:
           | &nbsp;
           strong {{users.length}}
-      .span6
+      .clearfix
+      .col-lg-4
         h4 Millennium Falcon controls
-        h5 Disabled:&nbsp;
-            input(type='checkbox',ng-model='chatDisabled')
-        h5 Hidden:&nbsp;
-            input(type='checkbox',ng-model='hidden')
-        h5 Don't show user join/left messages:&nbsp;
-            input(type='checkbox',ng-model='silentUserEnterLeave')
+        .form-horizontal
+          .form-group
+            label.col-lg-4.control-label Clear all the chat data
+            .col-lg-8
+              button.btn.btn-default(ng-click='reset()') Reset
+          .form-group
+            .col-lg-offset-4.col-lg-8
+              .checkbox
+                label
+                  input(type='checkbox', ng-model='chatDisabled')
+                  | Chat disabled
+          .form-group
+            .col-lg-offset-4.col-lg-8
+              .checkbox
+                label
+                  input(type='checkbox', ng-model='hidden')
+                  | Chat hidden
+          .form-group
+            .col-lg-offset-4.col-lg-8
+              .checkbox
+                label
+                  input(type='checkbox', ng-model='silentUserEnterLeave')
+                  | Show enter/leave messages
+          .form-group
+            label.col-lg-4.control-label(for='txtCoolDown') Cool down timeout:
+            .col-lg-8.input-group
+              input.form-control(id='txtCoolDown', min='1000', type='number', ng-model='coolDownTimeout')
+              span.input-group-addon ms
+          .form-group
+            label.col-lg-4.control-label(for='txtMaxMessagesPerMin') Max messages/minute:
+            .col-lg-8
+              input.form-control(id='txtMaxMessagesPerMin', min='1', type='number', ng-model='maxMessagesPerMin')
+          .form-group
+            label.col-lg-4.control-label(for='txtSavedMessagesCount') Messages history size:
+            .col-lg-8
+              input.form-control(id='txtSavedMessagesCount', min='10', type='number', ng-model='savedMessagesCount')
+          .form-group
+            label.col-lg-4.control-label(for='txtChatWidth') Chat width:
+            .col-lg-8.input-group
+              input.form-control(id='txtChatWidth', min='400', type='number', ng-model='chatWidth')
+              span.input-group-addon px
+          .form-group
+            label.col-lg-4.control-label(for='txtChatHeight') Chat height:
+            .col-lg-8.input-group
+              input.form-control(id='txtChatHeight', min='100', type='number', ng-model='chatHeight')
+              span.input-group-addon px
         h4 Allowed URL domains
         table.table.table-bordered
           thead
@@ -40,11 +81,12 @@ html(ng-app='ca', ng-controller='SettingsCtrl')
                 a.btn.btn-danger(ng-click='removeDomain($index)') Remove
             tr(ng-show='!allowedURLDomains.length')
               td(colspan='3') No URL domains defined
-
-        .input-append
-          input(ng-model='newDomain', type='text')
-          a.btn.btn-success(ng-click='addDomain()') Add domain
-        h4 Domains allowed to run chat (host.com:port | host.com)
+        .input-group.col-lg-6.no-gutter
+          input.form-control(type='text', ng-model='newDomain')
+          span.input-group-btn
+            a.btn.btn-success(ng-click='addDomain()') Add domain
+        .clearfix
+        h4 Domains allowed to run chat
         table.table.table-bordered
           thead
             th Domain
@@ -56,11 +98,12 @@ html(ng-app='ca', ng-controller='SettingsCtrl')
                 a.btn.btn-danger(ng-click='removeAllowed($index)') Remove
             tr(ng-show='!allowedDomains.length')
               td(colspan='3') No allowed domains, your chat won't work anywhere! :)
-
-        .input-append
-          input(ng-model='newAllowed', type='text')
-          a.btn.btn-success(ng-click='addAllowed()') Add domain
-      .span6
+        .input-group.col-lg-6.no-gutter
+          input.form-control(type='text', ng-model='newAllowed')
+          span.input-group-btn
+            a.btn.btn-success(ng-click='addAllowed()') Add domain
+        .clearfix
+      .col-lg-4
         h4 Blacklist
         table.table.table-bordered
           thead
@@ -73,33 +116,29 @@ html(ng-app='ca', ng-controller='SettingsCtrl')
                 a.btn.btn-danger(ng-click='removeRude($index)') Remove
             tr(ng-show='!blacklist.length')
               td(colspan='3') No rude words o_O!
-        .input-append
-          input(ng-model='newRude', type='text')
-          a.btn.btn-success(ng-click='addRude()') Add rude word
-      .span6
-        h4 Timeouts and other values
-        h5 Cool down timeout:
-        .input-append
-          input(type='number', ng-model='coolDownTimeout', min='1000')
-          span.add-on ms
-        h5 Max number of messages per minute (SPAM detection):
-        input(type='number', ng-model='maxMessagesPerMin', min=1)
-        h5 Messages to store in history:
-        input(type='number', ng-model='savedMessagesCount', min='10')
-        h5 Bit.ly login:
-        input(type='text', ng-model='bitlyLogin')
-        h5 Bit.ly API key:
-        input(type='text', ng-model='bitlyKey')
-        h5 Chat width:
-        .input-append
-          input(type='number', ng-model='chatWidth', min='400')
-          span.add-on px
-        h5 Chat height:
-        .input-append
-          input(type='number', ng-model='chatHeight', min='100')
-          span.add-on px
-      .clearfix
-      .span6
+        .input-group.col-lg-6.no-gutter
+          input.form-control(type='text', ng-model='newRude')
+          span.input-group-btn
+            a.btn.btn-success(ng-click='addRude()') Add word
+        .clearfix
+      .col-lg-4
+        h4 Banned IP addresses
+        table.table.table-bordered
+          thead
+            th IP
+            th Actions
+          tbody
+            tr(ng-repeat='ip in bannedIPs')
+              td {{ip}}
+              td
+                a.btn.btn-danger(ng-click='removeIP($index)') Remove
+            tr(ng-show='!bannedIPs.length')
+              td(colspan='3') No IPs in banlist
+        .input-group.col-lg-6.no-gutter
+          input.form-control(type='text', ng-model='newIP')
+          span.input-group-btn
+            a.btn.btn-success(ng-click='addIP()') Add IP
+        .clearfix
         h4 Users
         table.table.table-bordered
           thead
@@ -114,22 +153,3 @@ html(ng-app='ca', ng-controller='SettingsCtrl')
                 a.btn.btn-danger(ng-click='ban($index)') Ban
             tr(ng-show='!users.length')
               td(colspan='3') No online users
-      .span6
-        h4 Banned IP addresses
-        table.table.table-bordered
-          thead
-            th IP
-            th Actions
-          tbody
-            tr(ng-repeat='ip in bannedIPs')
-              td {{ip}}
-              td
-                a.btn.btn-danger(ng-click='removeIP($index)') Remove
-            tr(ng-show='!bannedIPs.length')
-              td(colspan='3') No IPs in banlist
-        .input-append
-          input(ng-model='newIP', type='text')
-          a.btn.btn-success(ng-click='addIP()') Add IP
-
-
-

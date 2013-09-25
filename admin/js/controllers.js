@@ -108,4 +108,8 @@ function SettingsCtrl($scope, $rootScope, $io) {
     $scope.addIP(user.ip)
     $io.emit('ban', user.name)
   }
+
+  $scope.reset = function() {
+    $io.emit('reset chat')
+  }
 }

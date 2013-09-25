@@ -34,6 +34,16 @@
   left: 1px;
 }
 
+.chat-app .disabled {
+  background-color: rgba(217, 83, 79, 0.5);
+  color: #fafafa;
+  font-size: 48px;
+  left: 1px;
+  position: absolute;
+  text-align: center;
+  top: 1px;
+}
+
 .chat-app .panel-body {
   overflow: visible;
 }

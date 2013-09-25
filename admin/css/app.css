@@ -1,4 +1,8 @@
-.row-fluid > h3 {
+.row > h3 {
   padding-left: 30px;
   padding-right: 30px;
+}
+
+.no-gutter {
+  padding-left: 0;
 }

@@ -24,7 +24,7 @@
  "bitlyLogin": "liberitas",
  "bitlyKey": "R_5784b8d2a65281bcab1151993f527595",
  "coolDownTimeout": 5000,
- "maxMessagesPerMin": 10,
+ "maxMessagesPerMin": 100,
  "savedMessagesCount": 100,
  "hidden": false,
  "chatDisabled": false,

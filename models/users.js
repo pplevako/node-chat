@@ -180,6 +180,17 @@ Users.prototype.rename = function(user, newName) {
 
 
 /**
+ * Reset chat history and emit 'history' event to all the guests
+ */
+Users.prototype.resetHistory = function() {
+  this.history = []
+  this.io.emit('history', [])
+}
+
+
+
+
+/**
  * List of users to send to user
  *
  * @param {string} exclude Name of user to exclude

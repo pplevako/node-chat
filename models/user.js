@@ -7,6 +7,15 @@ var geoip = require('./geoip')
 module.exports = User
 
 
+/**
+ * Reset guest number
+ */
+module.exports.reset = function() {
+  guestNumber = 1
+}
+
+
+
 
 
 function assignGuestName() {

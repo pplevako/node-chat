@@ -285,6 +285,9 @@ define([
       var mainChat = $scope.getChat(config.mainChatLabel)
         , data
 
+      // clear history first
+      mainChat.messages = []
+
       while (data = history.shift()) {
         $scope.addMessage(mainChat, utils.toMessageObject(data))
       }

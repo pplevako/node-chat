@@ -60,5 +60,9 @@ module.exports = function(io) {
     socket.on('ban', function(name) {
       settingsManager.users.ban(name)
     })
+
+    socket.on('reset chat', function() {
+      settingsManager.resetChat()
+    })
   })
 }
