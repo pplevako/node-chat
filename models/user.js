@@ -31,8 +31,9 @@ function assignGuestName() {
  * @constructor
  * @param {Users} manager Ref to users manager
  * @param {Object} session Express session
+ * @param {Socket} socket Socket.io connection
  */
-function User(manager, session) {
+function User(manager, session, socket) {
   this.manager = manager
   this.sockets = []
   this.session = session
@@ -79,6 +80,8 @@ function User(manager, session) {
   if (!settingsManager) {
     settingsManager = require('./settings')
   }
+
+  this.addSocket(socket)
 
   manager.message(
     this.name,

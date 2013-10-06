@@ -63,11 +63,9 @@ Users.prototype.ban = function(name) {
 Users.prototype.create = function(socket, session) {
   var user = this.getByName(session.name)
   if (!user) {
-    user = new User(this, session)
+    user = new User(this, session, socket)
     this.users[user.name] = user
   }
-
-  user.addSocket(socket)
 
   socket.emit('me', user.serialize())
   socket.emit('settings', settingsManager.userSettings())
