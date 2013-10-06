@@ -17,7 +17,7 @@ exports.applyTo = function(obj, address) {
   obj.country = lookup.country
   obj.state = lookup.region
   obj.city = lookup.city
-  obj.ll = lookup.ll
+  obj.ll = lookup.ll || [0, 0]
 
   return true
 }

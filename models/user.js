@@ -106,8 +106,9 @@ User.prototype.addSocket = function(socket) {
   if (idx !== -1) return
   this.sockets.push(socket)
 
-  if (!socket.handshake) return
-  else if (socket.handshake.headers['x-forwarded-for']) {
+  if (this.ip || !socket || !socket.handshake) {
+    return
+  } else if (socket.handshake.headers['x-forwarded-for']) {
     addr = socket.handshake.headers['x-forwarded-for']
   } else {
     addr = socket.handshake.address.address
