@@ -39,6 +39,7 @@ define([
     /** Scope variables */
     $scope.chats = [
       {
+        visible:  true,
         name:     config.mainChatLabel,
         messages: []
       }
@@ -73,8 +74,8 @@ define([
           , message
 
         // private mode
-        if ($(messages).find('panel-body').length) {
-          message = $(messages).find('panel-body').children().last()[0]
+        if ($(messages).find('.panel-body').length) {
+          message = $(messages).find('.panel-body').children().last()[0]
         } else {
           message = $(messages).children()[length - 1]
         }
@@ -110,6 +111,20 @@ define([
 
       if (chat = $scope.getChat(name)) {
         $scope.addMessage(chat, message)
+      }
+    }
+
+    /**
+     * Chat height
+     */
+    $scope.chatStyle = function(chat) {
+      if (chat.visible) return {height: '363px'}
+
+      return {
+        bottom: 0,
+        height: '38px',
+        position: 'absolute',
+        width: '100%'
       }
     }
 
@@ -256,6 +271,7 @@ define([
      */
     $scope.startPrivate = function(from, message) {
       var chat = {
+        visible:  true,
         name:     from,
         messages: []
       }
@@ -268,6 +284,13 @@ define([
       }
 
       return chat
+    }
+
+    /**
+     * Toggle chat visibility
+     */
+    $scope.toggleChat = function(chat) {
+      chat.visible = !chat.visible
     }
   }
 
@@ -343,6 +366,7 @@ define([
 
       if (chat) {
         $scope.addMessage(chat, msgObject)
+        chat.visible = true
       } else {
         $scope.startPrivate(from, msgObject)
       }

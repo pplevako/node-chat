@@ -106,8 +106,8 @@ User.prototype.addSocket = function(socket) {
   if (idx !== -1) return
   this.sockets.push(socket)
 
-
-  if (socket.handshake.headers['x-forwarded-for']) {
+  if (!socket.handshake) return
+  else if (socket.handshake.headers['x-forwarded-for']) {
     addr = socket.handshake.headers['x-forwarded-for']
   } else {
     addr = socket.handshake.address.address
@@ -157,11 +157,14 @@ User.prototype.ban = function() {
  * Emit event to all the sockets
  */
 User.prototype.emit = function() {
-  var i = 0
+  var i = this.sockets.length
     , sock
-  while (i < this.sockets.length) {
-    sock = this.sockets[i++]
-    sock.emit.apply(sock, arguments)
+
+  while (i) {
+    i--
+    sock = this.sockets[i]
+    if (!sock) this.sockets.splice(i, 1)
+    else sock.emit.apply(sock, arguments)
   }
 }
 

@@ -152,24 +152,34 @@
 /* private only mode */
 .chat-app-private {
   background-color: rgba(0, 0, 0, 0);
-  bottom: 0;
+  bottom: -363px;
   color: #2c3e50;
   font-family: "Lato", "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-size: 15px;
+  height: 363px;
   line-height: 1.428571429;
   position: fixed;
   right: 0;
   z-index: 100500;
 }
 
-.chat-app-private > .messages {
+.chat-app-private .messages {
   margin-bottom: 0;
+  overflow-y: inherit;
 }
 
 .chat-app-private .panel {
+  float: right;
+  height: 100%;
   margin-bottom: 0;
   margin-right: 10px;
+  position: relative;
   width: 250px;
+  top: -363px;
+}
+
+.chat-app-private .panel.minimized {
+  top: -38px;
 }
 
 .chat-app-private .panel > .panel-heading {

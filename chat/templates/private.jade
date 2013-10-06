@@ -3,16 +3,16 @@ link(media="screen", rel="stylesheet", type="text/css", ng-href="{{ baseUrl }}cs
 link(media="screen", rel="stylesheet", type="text/css", ng-href="{{ baseUrl }}css/chat.css")
 div(ng-cloak, ng-controller="MainCtrl")
   div.messages(ng-controller="MessagesCtrl")
-    .panel.panel-default(ng-repeat="chat in chats", ng-show="$index")
-      .panel-heading
+    .panel.panel-default(ng-class="{'panel-warning': chat.hasNew, minimized: !chat.visible}", ng-click="setCurrent(chat)", ng-repeat="chat in chats", ng-show="$index")
+      .panel-heading(ng-click="toggleChat(chat)")
         span.name {{chat.name}}
         | &nbsp;
         a(target="_blank", ng-href="{{chatPageURL}}")
           img(title="Open chat window", ng-src='{{ baseUrl }}img/icon_new_window.png')
         img.close(ng-src="{{ baseUrl }}img/close-private.png", ng-click="close(chat)")
-      .panel-body
+      .panel-body(ng-show="chat.visible")
         p(ng-bind-html-unsafe="messageString(msg, true)", ng-class="messageClass(msg.type)", ng-repeat="msg in chat.messages")
-      .panel-footer(ng-controller="MessageCtrl")
+      .panel-footer(ng-controller="MessageCtrl", ng-show="chat.visible")
         form.input-group(ng-submit="send()")
           input.form-control.input-sm(placeholder="Message...", type="text", ng-disabled="disabled || blocked", ng-model="message")
           span.input-group-btn
