@@ -78,6 +78,19 @@ Once you've edited this file you can build minified client application:
 
 Now you can start your app.
 
+Private messages only mode
+--------------------------
+
+You can start client-side chat application in private messages only mode. To do
+this you have to add class `chat-app-private` to chat container as follows:
+
+```html
+<div class="chat-app-private" id="chat"></div>
+```
+
+This mode means that guest will be logged into chat, but will be able to receive
+& send private messages only. If someone sends him a message guest will see
+pop-up block in right bottom corner of the screen.
 
 Start
 -----
