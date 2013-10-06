@@ -146,12 +146,14 @@ User.prototype.addToHistory = function(from, message, chatName) {
  * Emit event to all the sockets
  */
 User.prototype.ban = function() {
-  var i = 0
+  var i = this.sockets.length
     , sock
 
-  while (i < this.sockets.length) {
-    sock = this.sockets[i++]
-    sock.manager.onClientDisconnect(sock.id);
+  while (i) {
+    i--
+    sock = this.sockets[i]
+    if (!sock) this.sockets.splice(i, 1)
+    else sock.manager.onClientDisconnect(sock.id);
   }
 }
 
