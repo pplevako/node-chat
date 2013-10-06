@@ -42,10 +42,12 @@
             span.input-group-btn
               input.btn.btn-default(type="submit", value="Send")
       .col-md-4.users(ng-controller="UsersCtrl")
-        p Users in chat:<strong>{{ users.length + 1 }}
+        p
+          | Users in chat:
+          strong {{ users.length + 1 }}
         ul(ng-style="{height: (chatHeight - 70) + 'px'}")
           li(ng-show="user.name != me.name", ng-repeat="user in users | orderBy: 'distance'")
-            a(ng-click="startPrivate(user)") &gt;{{ user.name }}
+            a(ng-click="startPrivate(user)") &gt;{{ user.name }}&nbsp;
             | ({{ locationString(user) }})
       .clearfix
       // smiles popover
