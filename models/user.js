@@ -1,6 +1,7 @@
 'use strict'
 
-var geoip = require('./geoip')
+var settingsManager
+  , geoip = require('./geoip')
   , guestNumber = 1
 
 
@@ -17,7 +18,6 @@ module.exports.reset = function() {
 
 
 
-
 function assignGuestName() {
   return 'Guest_' + guestNumber++
 }
@@ -29,19 +29,28 @@ function assignGuestName() {
  * User class
  *
  * @constructor
- * @param {Users} manager
- * @param {io.Socket} socket
+ * @param {Users} manager Ref to users manager
+ * @param {Object} session Express session
  */
-function User(manager, socket) {
+function User(manager, session) {
   this.manager = manager
-  this.socket = socket
+  this.sockets = []
+  this.session = session
 
   /**
    * User name
    *
    * @type {string}
    */
-  this.name = assignGuestName()
+  if (!session.name) {
+    this.name = assignGuestName()
+    session.name = this.name
+    session.history = []
+    session.save()
+  } else {
+    this.name = session.name
+  }
+
 
   /**
    * Timestamp: when user was blocked
@@ -67,22 +76,94 @@ function User(manager, socket) {
   this.country = null
   this.city = null
 
-  var addr
+  if (!settingsManager) {
+    settingsManager = require('./settings')
+  }
+
+  manager.message(
+    this.name,
+    this.name + ' entered chat',
+    'new-user',
+    this.serialize(), settingsManager.silentUserEnterLeave)
+
+  settingsManager.emit('user added', {
+    name: this.name,
+    ip:   this.ip
+  })
+}
+
+
+
+
+/**
+ * Add connection to user object
+ *
+ * @param {Socket} socket Socket instance
+ */
+User.prototype.addSocket = function(socket) {
+  var idx = this.sockets.indexOf(socket)
+    , addr
+  if (idx !== -1) return
+  this.sockets.push(socket)
+
+
   if (socket.handshake.headers['x-forwarded-for']) {
     addr = socket.handshake.headers['x-forwarded-for']
   } else {
     addr = socket.handshake.address.address
   }
 
-  /**
-   * IP of user
-   *
-   * @type {string}
-   */
   this.ip = addr
   geoip.applyTo(this, addr)
 }
 
+
+
+
+/**
+ * Add to message to private messages history
+ *
+ * @param {string} from Sender of messages
+ * @param {string} message Message itself
+ * @param {string} chatName Private chat name == name of another guest
+ */
+User.prototype.addToHistory = function(from, message, chatName) {
+  var msg = ['private', from, message, Date.now(), chatName]
+  if (this.session.history.length === settingsManager.privateMessagesCount) {
+    this.session.history.shift()
+  }
+  this.session.history.push(msg)
+  this.session.save()
+}
+
+
+
+/**
+ * Emit event to all the sockets
+ */
+User.prototype.ban = function() {
+  var i = 0
+    , sock
+
+  while (i < this.sockets.length) {
+    sock = this.sockets[i++]
+    sock.manager.onClientDisconnect(sock.id);
+  }
+}
+
+
+
+/**
+ * Emit event to all the sockets
+ */
+User.prototype.emit = function() {
+  var i = 0
+    , sock
+  while (i < this.sockets.length) {
+    sock = this.sockets[i++]
+    sock.emit.apply(sock, arguments)
+  }
+}
 
 
 
@@ -116,8 +197,9 @@ User.prototype.onMessage = function(message) {
  */
 User.prototype.onPrivateMessage = function(message, to) {
   this.manager.privateMessage(this.name, to, message)
+  this.addToHistory(this.name, message, to)
 
-  this.socket.emit('private message sent', message, to)
+  this.emit('private message sent', message, to)
 }
 
 
@@ -131,6 +213,26 @@ User.prototype.onPrivateMessage = function(message, to) {
 User.prototype.onRename = function(newName) {
   this.manager.rename(this, newName)
   this.name = newName
+  this.session.name = newName
+  this.session.save()
+}
+
+
+
+
+/**
+ * Remove connection from user object
+ *
+ * @param {Socket} socket Socket instance
+ */
+User.prototype.removeSocket = function(socket) {
+  var idx = this.sockets.indexOf(socket)
+  if (idx === -1) return
+  this.sockets.splice(idx, 1)
+
+  if (this.sockets.length === 0) {
+    this.destroy()
+  }
 }
 
 
@@ -143,7 +245,9 @@ User.prototype.onRename = function(newName) {
  * @param {string} message
  */
 User.prototype.sendPrivateMessage = function(from, message) {
-  this.socket.emit('private message', from, message)
+  this.addToHistory(from, message, from)
+
+  this.emit('private message', from, message)
 }
 
 

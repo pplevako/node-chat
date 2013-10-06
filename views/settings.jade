@@ -52,6 +52,10 @@ html(ng-app='ca', ng-controller='SettingsCtrl')
               input.form-control(id='txtCoolDown', min='1000', type='number', ng-model='coolDownTimeout')
               span.input-group-addon ms
           .form-group
+            label.col-lg-4.control-label(for='txtChatPageURL') Chat page URL:
+            .col-lg-8
+              input.form-control(id='txtChatPageURL', min='1', type='text', ng-model='chatPageURL')
+          .form-group
             label.col-lg-4.control-label(for='txtMaxMessagesPerMin') Max messages/minute:
             .col-lg-8
               input.form-control(id='txtMaxMessagesPerMin', min='1', type='number', ng-model='maxMessagesPerMin')

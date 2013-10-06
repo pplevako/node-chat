@@ -1,20 +1,21 @@
 {
-  "name": "express-angular-chat",
-  "version": "0.0.1",
-  "private": true,
-  "scripts": {
-    "build-client": "node scripts/gen-template.js && cd chat/js && ../../node_modules/.bin/r.js -o baseUrl=. name=../lib/require.js/almond include=main mainConfigFile=main.js",
-    "build-template": "node scripts/gen-template.js",
-    "postinstall": "node node_modules/geoip-lite/scripts/updatedb.js",
-    "start": "node app.js"
+  "name":         "express-angular-chat",
+  "version":      "0.0.1",
+  "private":      true,
+  "scripts":      {
+    "build-client":   "npm run-script build-template && cd chat/js && ../../node_modules/.bin/r.js -o baseUrl=. name=../lib/require.js/almond include=main mainConfigFile=main.js",
+    "build-template": "node scripts/gen-template.js index.jade template.js && node scripts/gen-template.js private.jade templatePrivate.js",
+    "postinstall":    "node node_modules/geoip-lite/scripts/updatedb.js",
+    "start":          "node app.js"
   },
   "dependencies": {
-    "express": "3.3.5",
-    "geoip-lite": "~1.1.1",
-    "jade": "*",
-    "shorturl": "0.0.3",
-    "socket.io": "~0.9.16",
-    "q": "~0.9.7",
-    "requirejs": "~2.1.8"
+    "express":           "3.3.5",
+    "geoip-lite":        "~1.1.1",
+    "jade":              "*",
+    "shorturl":          "0.0.3",
+    "session.socket.io": "git://github.com/7eggs/session.socket.io.git",
+    "socket.io":         "~0.9.16",
+    "q":                 "~0.9.7",
+    "requirejs":         "~2.1.8"
   }
 }

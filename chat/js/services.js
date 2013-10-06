@@ -3,16 +3,19 @@
 define([
   'angular',
   'config',
-  'socket.io'
+  'io'
 ], function(angular, config, io) {
   var services = angular.module('chat.services', [])
 
   services.factory('geoDistance', function() {
-      return {
-        distance: function(ll1, ll2) {
-            return (ll2[0] - ll1[0])*(ll2[0] - ll1[0]) + (ll2[1] - ll1[1])*(ll2[1] - ll1[1])
-        }
+    return {
+      distance: function(ll1, ll2) {
+        if (!ll1 || !ll1.length) ll1 = [0, 0]
+        if (!ll2 || !ll2.length) ll2 = [0, 0]
+
+        return (ll2[0] - ll1[0]) * (ll2[0] - ll1[0]) + (ll2[1] - ll1[1]) * (ll2[1] - ll1[1])
       }
+    }
   })
 
   services.factory('$io', function($rootScope) {

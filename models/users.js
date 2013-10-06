@@ -12,7 +12,7 @@ module.exports = Users
  * Chat manager
  *
  * @constructor
- * @param {*} io Socket.io manager
+ * @param {SocketNamespace} io Socket.io namespace
  */
 function Users(io) {
   this.io = io
@@ -47,7 +47,7 @@ Users.prototype.ban = function(name) {
   var user = this.getByName(name)
   if (!user) return
 
-  user.socket.manager.onClientDisconnect(user.socket.id);
+  user.ban()
 }
 
 
@@ -56,28 +56,23 @@ Users.prototype.ban = function(name) {
 /**
  * Create & add new user
  *
- * @param {io} socket
+ * @param {Socket} socket
+ * @param {Object} session Express session
  * @returns {User} User object
  */
-Users.prototype.create = function(socket) {
-  var user = new User(this, socket)
-  this.users[user.name] = user
+Users.prototype.create = function(socket, session) {
+  var user = this.getByName(session.name)
+  if (!user) {
+    user = new User(this, session)
+    this.users[user.name] = user
+  }
 
-  user.socket.emit('me', user.serialize())
-  user.socket.emit('settings', settingsManager.userSettings())
-  user.socket.emit('users', this.usersList(user.name))
-  user.socket.emit('history', this.history)
+  user.addSocket(socket)
 
-  this.message(
-    user.name,
-    user.name + ' entered chat',
-    'new-user',
-    user.serialize(), settingsManager.silentUserEnterLeave)
-
-  settingsManager.emit('user added', {
-    name: user.name,
-    ip: user.ip
-  })
+  socket.emit('me', user.serialize())
+  socket.emit('settings', settingsManager.userSettings())
+  socket.emit('users', this.usersList(user.name))
+  socket.emit('history', this.history.concat(session.history))
 
   return user
 }

@@ -2,8 +2,8 @@
 
 define([], function() {
   return {
-    baseUrl:            'http://127.0.0.1:3000/',
-    chatRootSelector:   '#chat',
+    baseUrl:             'http://127.0.0.1:3000/',
+    chatRootSelector:    '#chat',
     lockTimeout:         400,
     mainChatLabel:       'Main',
     renameModalSelector: '#changeName',

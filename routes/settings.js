@@ -16,7 +16,9 @@ module.exports = function(io) {
     io.emit('user renamed', data)
   })
 
-  io.on('connection', function(socket) {
+  io.on('connection', function(err, socket, session) {
+    if (err) return console.error(err.stack)
+
     socket.isAdmin = true
 
     socket.emit('settings', settingsManager.serialize())

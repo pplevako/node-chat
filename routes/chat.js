@@ -18,10 +18,11 @@ module.exports = function(io) {
         callback(null, true)
       }
     })
-    .on('connection', function(socket) {
-      if (socket.isAdmin) return
+    .on('connection', function(err, socket, session) {
+      if (err) return console.error(err.stack)
+      else if (socket.isAdmin) return
 
-      var user = users.create(socket)
+      var user = users.create(socket, session)
 
       function error(err) {
         var evt = err.reason || 'error'
@@ -64,15 +65,15 @@ module.exports = function(io) {
       }
 
 
-      function userDisconnected() {
-        user.destroy()
+      function socketDisconnected() {
+        user.removeSocket(socket)
       }
 
 
       socket.on('message', messageRequest);
       socket.on('private message', privateMessageRequest)
       socket.on('rename', renameRequest)
-      socket.on('disconnect', userDisconnected)
+      socket.on('disconnect', socketDisconnected)
     })
 
     settingsManager.on('user settings update', function() {

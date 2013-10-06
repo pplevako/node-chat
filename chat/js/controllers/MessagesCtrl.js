@@ -39,23 +39,22 @@ define([
     /** Scope variables */
     $scope.chats = [
       {
-        name: config.mainChatLabel,
+        name:     config.mainChatLabel,
         messages: []
       }
     ]
 
     $rootScope.current = $scope.chats[0]
 
-    this.addScopeMethods($scope, $rootScope)
+    this.addScopeMethods($scope, $rootScope, $io)
     this.registerScopeListeners($scope)
     this.registerIOListeners($scope, $rootScope, $io)
-
   }
 
 
 
 
-  MessagesCtrl.prototype.addScopeMethods = function($scope, $rootScope) {
+  MessagesCtrl.prototype.addScopeMethods = function($scope, $rootScope, $io) {
     /**
      * Add message to chat
      *
@@ -71,7 +70,14 @@ define([
 
       setTimeout(function() {
         var messages = $(config.messagesSelector).children()[idx]
-          , message = $(messages).children()[length-1]
+          , message
+
+        // private mode
+        if ($(messages).find('panel-body').length) {
+          message = $(messages).find('panel-body').children().last()[0]
+        } else {
+          message = $(messages).children()[length - 1]
+        }
 
         $(message).find('span.message').emoticonize({
           animate: true
@@ -91,6 +97,8 @@ define([
         , name = message.from
 
       if (!~['dead-user', 'rename'].indexOf(message.type)) {
+        return
+      } else if (message.extra && message.extra.silent) {
         return
       }
 
@@ -173,8 +181,8 @@ define([
       if (!type) return null
 
       var map = {
-        'rename': 'system',
-        'new-user': 'system',
+        'rename':    'system',
+        'new-user':  'system',
         'dead-user': 'system'
       }
 
@@ -185,8 +193,9 @@ define([
      * Generate message string
      *
      * @param {Object} msg
+     * @param {boolean} compact
      */
-    $scope.messageString = function(msg) {
+    $scope.messageString = function(msg, compact) {
       var str = []
 
       str.push('<span class="time">', prettyTime(msg.date), '</span>')
@@ -194,7 +203,7 @@ define([
       if (msg.type) {
         str.push('<span class="', $scope.messageClass(msg.type), '">', msg.text, '</span>')
       } else {
-        str.push('<span class="user">&gt;', msg.from, '</span>')
+        str.push('<span class="user">', (compact ? '' : '&gt;'), msg.from, '</span>')
         str.push(':&nbsp;')
         str.push('<span class="message">', msg.text, '</span>')
       }
@@ -208,10 +217,15 @@ define([
      * @param {Element} messagesElement
      */
     $scope.scrollChat = function(messagesElement) {
-        var chat = $(messagesElement)
-          , messagesBox = $(config.messagesSelector)
+      var chat = $(messagesElement)
+        , messagesBox = $(config.messagesSelector)
 
+      if ($(chat).find('.panel-body').length) {
+        chat = $(chat).find('.panel-body')
+        chat.scrollTop(chat[0].scrollHeight - chat.height())
+      } else {
         messagesBox.scrollTop(chat[0].scrollHeight - messagesBox.height());
+      }
     }
 
     /**
@@ -242,7 +256,7 @@ define([
      */
     $scope.startPrivate = function(from, message) {
       var chat = {
-        name: from,
+        name:     from,
         messages: []
       }
 
@@ -252,6 +266,8 @@ define([
       if (message) {
         $scope.addMessage(chat, message)
       }
+
+      return chat
     }
   }
 
@@ -289,6 +305,22 @@ define([
       mainChat.messages = []
 
       while (data = history.shift()) {
+        if (data[0] === 'private') {
+          data[0] = null
+
+          var name = data.pop()
+            , chat = $scope.getChat(name)
+            , msgObject = utils.toMessageObject(data)
+
+          if (chat) {
+            $scope.addMessage(chat, msgObject)
+          } else {
+            $scope.startPrivate(name, msgObject)
+          }
+
+          continue
+        }
+
         $scope.addMessage(mainChat, utils.toMessageObject(data))
       }
     })
@@ -299,8 +331,8 @@ define([
         , message = utils.toMessageObject(data)
 
       $scope.addToPrivate(message)
-      if (message.extra && message.extra.silent)
-        return
+
+      if (message.extra && message.extra.silent) return
       $scope.addMessage(mainChat, message)
     })
 
@@ -322,7 +354,12 @@ define([
         , msgObject = utils.toMessageObject(data)
         , chat = $scope.getChat(to)
 
-      $scope.addMessage(chat, msgObject)
+      if (chat) {
+        $scope.addMessage(chat, msgObject)
+      } else {
+        // private mode
+        $scope.startPrivate(to, msgObject)
+      }
     })
   }
 

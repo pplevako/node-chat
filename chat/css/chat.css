@@ -148,3 +148,71 @@
     width: 33.33333333333333%
   }
 }
+
+/* private only mode */
+.chat-app-private {
+  background-color: rgba(0, 0, 0, 0);
+  bottom: 0;
+  color: #2c3e50;
+  font-family: "Lato", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 15px;
+  line-height: 1.428571429;
+  position: fixed;
+  right: 0;
+}
+
+.chat-app-private > .messages {
+  margin-bottom: 0;
+}
+
+.chat-app-private .panel {
+  margin-bottom: 0;
+  margin-right: 10px;
+  width: 250px;
+}
+
+.chat-app-private .panel > .panel-heading {
+  padding: 7px 10px;
+}
+
+
+.chat-app-private .panel > .panel-heading > * {
+  vertical-align: middle;
+  line-height: 18px;
+}
+
+.chat-app-private .panel > .panel-heading > .name {
+  font-weight: bold;
+}
+
+.chat-app-private .panel > .panel-heading > .close {
+  margin-top: 5px;
+}
+
+.chat-app-private .panel > .panel-body {
+  height: 280px;
+  overflow-y: auto;
+  padding: 5px;
+}
+
+.chat-app-private .panel > .panel-body > p {
+  position: relative;
+  padding-right: 20px;
+  font-size: 80%;
+  margin-bottom: 4px;
+}
+
+.chat-app-private .panel-body > p > span.message {
+  word-wrap: break-word;
+}
+
+.chat-app-private .panel-body > p > span.time {
+  position: absolute;
+  font-size: 90%;
+  right: 0;
+  top: 0;
+}
+
+.chat-app-private .panel > .panel-footer {
+  padding: 5px;
+}

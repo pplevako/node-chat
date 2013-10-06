@@ -1,0 +1,57 @@
+.panel.panel-default(ng-cloak, ng-controller="MainCtrl", ng-style="{display: displayValue(), width: chatWidth + 'px', height: chatHeight + 'px'}")
+  .bg(ng-style="{width: chatWidth - 2 + 'px', height: chatHeight - 2 + 'px'}")
+  link(media="screen", rel="stylesheet", type="text/css", ng-href="{{ baseUrl }}css/jquery.cssemoticons.css")
+  link(media="screen", rel="stylesheet", type="text/css", ng-href="{{ baseUrl }}css/bootstrap.min.css")
+  link(media="screen", rel="stylesheet", type="text/css", ng-href="{{ baseUrl }}css/chat.css")
+  // change name modal
+  .modal.fade(id="changeName", tabindex="-1", role="dialog", aria-labelledby="changeNameLabel", aria-hidden="true", ng-controller="ChangeNameCtrl")
+    .modal-dialog
+      .modal-content
+        .modal-header
+          button.close(type="button", data-dismiss="modal", aria-hidden="true") &times;
+          h3#changeNameLabel.modal-title Change name:
+        .modal-body
+          form(ng-submit="saveName()")
+            input.form-control(id="newName", type="text", ng-model="newName")
+            p.text-danger {{ error }}
+        .modal-footer
+          button.btn.btn-primary(type="button", data-dismiss="modal", ng-click="saveName()") Save
+  .panel-body.container
+    .row
+      .col-md-8
+        // messages list
+        div(ng-controller="MessagesCtrl")
+          ul.nav.nav-tabs
+            li(ng-class="{active: (current == chat), bold: chat.hasNew}", ng-click="setCurrent(chat)", ng-repeat="chat in chats")
+              a
+                | {{ chat.name }} &nbsp;
+                img(ng-src="{{ baseUrl }}img/close.png", ng-click="close(chat)", ng-show="$index")
+          .tab-content.messages(ng-style="{height: chatHeight - 152.5 + 'px'}")
+            .tab-pane(ng-class="{active: (current == chat)}", ng-repeat="chat in chats")
+              p(ng-bind-html-unsafe="messageString(msg)", ng-class="messageClass(msg.type)", ng-repeat="msg in chat.messages")
+        // message box
+        p.cooldown.text-danger
+          span(ng-show="blocked") Cool down {{ blocked|interval }} minutes.
+        .message-box(ng-controller="MessageCtrl")
+          form.input-group(ng-submit="send()")
+            span.input-group-btn
+              a.btn.btn-default(ng-click="changeName()") &gt;{{ me.name }}
+            input.form-control(placeholder="Type message...", type="text", ng-disabled="disabled || blocked", ng-model="message")
+            span.input-group-addon.btn.btn-smiles(ng-click="showSmiles()")
+              img(ng-src="{{ baseUrl }}img/smile.png")
+            span.input-group-btn
+              input.btn.btn-default(type="submit", value="Send")
+      .col-md-4.users(ng-controller="UsersCtrl")
+        p Users in chat:<strong>{{ users.length + 1 }}
+        ul(ng-style="{height: (chatHeight - 70) + 'px'}")
+          li(ng-show="user.name != me.name", ng-repeat="user in users | orderBy: 'distance'")
+            a(ng-click="startPrivate(user)") &gt;{{ user.name }}
+            | ({{ locationString(user) }})
+      .clearfix
+      // smiles popover
+      .col-md-8.popover-smiles(ng-controller="SmilesCtrl", ng-show="show")
+        .panel.panel-default
+          .panel-body
+  .disabled(ng-show="chatDisabled", ng-style="{width: chatWidth - 2 + 'px', height: chatHeight - 2 + 'px', 'line-height': chatHeight - 2 + 'px'}")
+    CHAT DISABLED
+.clearfix

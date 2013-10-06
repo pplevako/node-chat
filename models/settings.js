@@ -4,7 +4,6 @@ var config = require('../config')
   , EventEmitter = require('events').EventEmitter
   , fs = require('fs')
   , path = require('path')
-  , q = require('q')
   , urlParse = require('url').parse
   , User = require('./user')
   , util = require('util')
@@ -192,8 +191,8 @@ SettingsManager.prototype.serialize = function() {
     , keys = [
       'port', 'admin', 'allowedDomains', 'blacklist', 'bannedIPs', 'chatWidth',
       'chatHeight', 'allowedURLDomains', 'bitlyLogin', 'bitlyKey',
-      'coolDownTimeout', 'maxMessagesPerMin', 'savedMessagesCount',
-      'hidden', 'chatDisabled', 'silentUserEnterLeave'
+      'coolDownTimeout', 'maxMessagesPerMin', 'privateMessagesCount', 'savedMessagesCount',
+      'hidden', 'chatDisabled', 'silentUserEnterLeave', 'chatPageURL'
     ]
   keys.forEach(function(key) {
     out[key] = this[key]
@@ -238,7 +237,8 @@ SettingsManager.prototype.userSettings = function() {
     'chatHeight':      this.chatHeight,
     'coolDownTimeout': this.coolDownTimeout,
     'hidden':          this.hidden,
-    'chatDisabled':    this.chatDisabled
+    'chatDisabled':    this.chatDisabled,
+    'chatPageURL':     this.chatPageURL
   }
 }
 
@@ -254,6 +254,8 @@ SettingsManager.prototype.validateReferer = function(req, res, next) {
 
   parsed = urlParse(ref)
   if (!~this.allowedDomains.indexOf(parsed.host)) {
+    console.error('%s is not allowed to run chat', parsed.host)
+
     return res.send(403, '<h1>Not allowed</h1>')
   }
 

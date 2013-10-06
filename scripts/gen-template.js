@@ -1,23 +1,15 @@
 'use strict'
 
 var fs = require('fs')
+  , jade = require('jade')
   , path = require('path')
   , util = require('util')
-  , htmlPath = path.join(__dirname, '..', 'chat', 'index.html')
-  , tplPath = path.join(__dirname, '..', 'chat', 'js', 'template.js')
-  , html = fs.readFileSync(htmlPath).toString()
+  , jsPath = path.join(__dirname, '..', 'chat', 'js', process.argv[3])
+  , tplPath = path.join(__dirname, '..', 'chat', 'templates', process.argv[2])
+  , tpl = fs.readFileSync(tplPath).toString()
 
-var tokens = html.split('\n')
-  , token
-  , tpl = ''
+var fn = jade.compile(tpl, {filename: tplPath, pretty: false})
+  , html = fn({}).replace(/'/g, '\\\'')
   , pattern = 'define([],function(){\n  return \'%s\'\n})'
 
-while (tokens.length) {
-  token = tokens.shift().trim()
-
-  if (token) {
-    tpl += token.replace(/'/g, '\\\'')
-  }
-}
-
-fs.writeFileSync(tplPath, util.format(pattern, tpl))
+fs.writeFileSync(jsPath, util.format(pattern, html))
