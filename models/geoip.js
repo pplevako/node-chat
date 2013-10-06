@@ -14,9 +14,9 @@ exports.applyTo = function(obj, address) {
     return false
   }
 
-  obj.country = lookup.country
-  obj.state = lookup.region
-  obj.city = lookup.city
+  obj.country = encodeURIComponent(lookup.country)
+  obj.state = encodeURIComponent(lookup.region)
+  obj.city = encodeURIComponent(lookup.city)
   obj.ll = lookup.ll || [0, 0]
 
   return true
