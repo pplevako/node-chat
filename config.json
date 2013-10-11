@@ -22,14 +22,13 @@
  "allowedURLDomains": [
   "www.ssega.com"
  ],
- "bitlyLogin": "liberitas",
- "bitlyKey": "R_5784b8d2a65281bcab1151993f527595",
  "coolDownTimeout": 5000,
  "maxMessagesPerMin": 1000,
  "privateMessagesCount": 10,
  "savedMessagesCount": 100,
  "hidden": false,
  "chatDisabled": false,
+ "privateChatDisabled": false,
  "silentUserEnterLeave": true,
  "chatPageURL": "http://127.0.0.1:3000/"
 }

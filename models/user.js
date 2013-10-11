@@ -35,7 +35,6 @@ function assignGuestName() {
  */
 function User(manager, session, socket) {
   this.manager = manager
-  this.sockets = []
   this.session = session
 
   /**
@@ -47,6 +46,7 @@ function User(manager, session, socket) {
     this.name = assignGuestName()
     session.name = this.name
     session.history = []
+    session.sockets = []
     session.save()
   } else {
     this.name = session.name
@@ -104,10 +104,12 @@ function User(manager, session, socket) {
  * @param {Socket} socket Socket instance
  */
 User.prototype.addSocket = function(socket) {
-  var idx = this.sockets.indexOf(socket)
+  var idx = this.session.sockets.indexOf(socket.id)
     , addr
   if (idx !== -1) return
-  this.sockets.push(socket)
+
+  this.session.sockets.push(socket.id)
+  this.session.save()
 
   if (this.ip || !socket || !socket.handshake) {
     return
@@ -146,15 +148,14 @@ User.prototype.addToHistory = function(from, message, chatName) {
  * Emit event to all the sockets
  */
 User.prototype.ban = function() {
-  var i = this.sockets.length
-    , sock
+  var args = arguments
 
-  while (i) {
-    i--
-    sock = this.sockets[i]
-    if (!sock) this.sockets.splice(i, 1)
-    else sock.manager.onClientDisconnect(sock.id);
-  }
+  this.session.sockets.forEach(function(id) {
+    var io = this.manager.io
+      , sock = io.sockets[id]
+
+    sock.emit.apply(sock, args)
+  }, this)
 }
 
 
@@ -163,15 +164,14 @@ User.prototype.ban = function() {
  * Emit event to all the sockets
  */
 User.prototype.emit = function() {
-  var i = this.sockets.length
-    , sock
+  var args = arguments
 
-  while (i) {
-    i--
-    sock = this.sockets[i]
-    if (!sock) this.sockets.splice(i, 1)
-    else sock.emit.apply(sock, arguments)
-  }
+  this.session.sockets.forEach(function(id) {
+    var io = this.manager.io
+      , sock = io.sockets[id]
+
+    sock.emit.apply(sock, args)
+  }, this)
 }
 
 
@@ -235,11 +235,12 @@ User.prototype.onRename = function(newName) {
  * @param {Socket} socket Socket instance
  */
 User.prototype.removeSocket = function(socket) {
-  var idx = this.sockets.indexOf(socket)
+  var idx = this.session.sockets.indexOf(socket.id)
   if (idx === -1) return
-  this.sockets.splice(idx, 1)
+  this.session.sockets.splice(idx, 1)
+  this.session.save()
 
-  if (this.sockets.length === 0) {
+  if (this.session.sockets.length === 0) {
     this.destroy()
   }
 }

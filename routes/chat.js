@@ -19,7 +19,7 @@ module.exports = function(io) {
       }
     })
     .on('connection', function(err, socket, session) {
-      if (err) return console.error(err.stack)
+      if (err) return console.error(err.message)
       else if (socket.isAdmin) return
 
       var user = users.create(socket, session)

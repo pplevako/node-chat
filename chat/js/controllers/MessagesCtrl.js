@@ -326,9 +326,10 @@ define([
 
       // clear history first
       mainChat.messages = []
+      $scope.chats.splice(1)
 
       while (data = history.shift()) {
-        if (data[0] === 'private') {
+        if (data[0] === 'private' && config.privateMode !== true) {
           data[0] = null
 
           var name = data.pop()
@@ -382,7 +383,7 @@ define([
         $scope.addMessage(chat, msgObject)
       } else {
         // private mode
-        $scope.startPrivate(to, msgObject)
+        // $scope.startPrivate(to, msgObject)
       }
     })
   }

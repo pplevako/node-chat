@@ -38,6 +38,12 @@ html(ng-app='ca', ng-controller='SettingsCtrl')
             .col-lg-offset-4.col-lg-8
               .checkbox
                 label
+                  input(type='checkbox', ng-model='privateChatDisabled')
+                  | Private chats are disabled
+          .form-group
+            .col-lg-offset-4.col-lg-8
+              .checkbox
+                label
                   input(type='checkbox', ng-model='hidden')
                   | Chat hidden
           .form-group
@@ -45,7 +51,7 @@ html(ng-app='ca', ng-controller='SettingsCtrl')
               .checkbox
                 label
                   input(type='checkbox', ng-model='silentUserEnterLeave')
-                  | Show enter/leave messages
+                  | Hide enter/leave messages
           .form-group
             label.col-lg-4.control-label(for='txtCoolDown') Cool down timeout:
             .col-lg-8.input-group

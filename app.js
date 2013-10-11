@@ -7,7 +7,7 @@ var config = require('./config')
   , settingsManager = require('./models/settings')
   , app = express()
   , server = require('http').createServer(app)
-  , io = require('socket.io').listen(server)
+  , io = require('socket.io').listen(server, {'log level': 0})
   , cookieParser = express.cookieParser('something')
   , sessionStore = new (express.session.MemoryStore)
   , sessionSockets = new SessionSockets(io, sessionStore, cookieParser)
@@ -19,7 +19,6 @@ app.configure('all', function() {
   app.set('view engine', 'jade')
   app.use(cookieParser)
   app.use(express.session({secret: 'something', store: sessionStore}))
-  app.use(express.logger('short'))
   app.use(express.methodOverride())
 
   /** Allowed domains filter */
@@ -33,6 +32,10 @@ app.configure('all', function() {
 
   app.use('/admin', express.basicAuth(config.admin.user, config.admin.password))
   app.use('/admin', express.static(path.join(__dirname, 'admin')))
+})
+
+app.configure('development', function() {
+  app.use(express.logger('dev'))
 })
 
 require('./routes/http')(app)

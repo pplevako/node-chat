@@ -32,6 +32,8 @@ require([
   var $root = $(config.chatRootSelector)
   $root.addClass('chat-app')
   if ($root.hasClass('chat-app-private')) {
+    config.privateMode = true
+
     $root.html(templatePrivate)
   } else {
     $root.html(template)

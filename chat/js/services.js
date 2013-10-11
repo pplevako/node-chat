@@ -52,4 +52,57 @@ define([
       }
     }
   })
+
+  services.factory('$timer', function($timeout) {
+    /**
+     * Timer implementation
+     *
+     * @constructor
+     * @param {number} timeout Timeout in seconds
+     */
+    function Timer(timeout) {
+      if (!(this instanceof Timer)) {
+        return new Timer(timeout)
+      }
+
+      /**
+       * Called when timer stops
+       */
+      this.onFinish = function() {
+      }
+
+      /**
+       * Called before count down starts
+       */
+      this.onStart = function() {
+      }
+
+      this.time = timeout
+    }
+
+    /**
+     * Start timer
+     */
+    Timer.prototype.start = function() {
+      this.onStart()
+      this.tick()
+    }
+
+    /**
+     * Timer tick (1 second)
+     */
+    Timer.prototype.tick = function() {
+      var self = this
+
+      $timeout(function() {
+        self.time--
+
+        if (self.time) return self.tick()
+
+        self.onFinish()
+      }, 1000)
+    }
+
+    return Timer
+  })
 })

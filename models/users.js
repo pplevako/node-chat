@@ -65,6 +65,8 @@ Users.prototype.create = function(socket, session) {
   if (!user) {
     user = new User(this, session, socket)
     this.users[user.name] = user
+  } else {
+    user.addSocket(socket)
   }
 
   socket.emit('me', user.serialize())
@@ -90,6 +92,24 @@ Users.prototype.deleteByName = function(name) {
 
   // notify admin page
   settingsManager.emit('user deleted', name)
+}
+
+
+
+
+/**
+ * Iterate through all the users
+ *
+ * @param {Function} itr Iterator which takes {User} objects as the only arg.
+ */
+Users.prototype.eachUser = function(itr) {
+  var name
+
+  for (name in this.users) {
+    if (this.users.hasOwnProperty(name)) {
+      itr.call(this, this.users[name])
+    }
+  }
 }
 
 
@@ -167,6 +187,13 @@ Users.prototype.rename = function(user, newName) {
     {oldName: oldName, newName: newName})
 
   settingsManager.emit('user renamed', {oldName: oldName, newName: newName})
+
+  this.eachUser(function iterator(user) {
+    user.session.history.forEach(function(msg) {
+      if (msg[1] === oldName) msg[1] = newName
+      if (msg[4] === oldName) msg[4] = newName
+    })
+  })
 }
 
 
@@ -178,6 +205,10 @@ Users.prototype.rename = function(user, newName) {
 Users.prototype.resetHistory = function() {
   this.history = []
   this.io.emit('history', [])
+  this.eachUser(function iterator(user) {
+    user.session.history = []
+    user.session.save()
+  })
 }
 
 

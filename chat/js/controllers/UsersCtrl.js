@@ -27,9 +27,9 @@ define([], function() {
     $scope.locationString = function(user) {
       var location = []
 
-      user.country && location.push(user.country)
-      user.state && location.push(user.state)
-      user.city && location.push(user.city)
+      user.country && location.push(decodeURIComponent(user.country))
+      user.state && location.push(decodeURIComponent(user.state))
+      user.city && location.push(decodeURIComponent(user.city))
 
       return location.join(', ')
     }
