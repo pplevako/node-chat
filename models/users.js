@@ -37,17 +37,14 @@ function Users(io) {
   settingsManager.users = this
 
   setInterval(function clearPrivateHistory() {
-    console.log('clearing private history')
 
     self.eachUser(function iterator(user) {
       var i = 0
         , min = Date.now() - settingsManager.privateMessagesTTL
         , history = user.session.history
 
-      console.log('clearing history for %s.length=%d', user.name, history.length)
 
       while (i < history.length) {
-        console.log('clearing history: timestamp=%d, min=%d', history[i][3], min)
         if (history[i][3] < min) {
           history.splice(i, 1)
         } else {
