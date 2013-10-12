@@ -1,5 +1,8 @@
 'use strict'
 
+// patch fs module to avoid EMFILE errors
+require('graceful-fs')
+
 var config = require('./config')
   , express = require('express')
   , path = require('path')

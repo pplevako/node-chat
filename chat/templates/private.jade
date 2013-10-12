@@ -13,7 +13,7 @@ div(ng-cloak, ng-controller="MainCtrl")
       .panel-body(ng-show="chat.visible")
         p(ng-bind-html-unsafe="messageString(msg, true)", ng-class="messageClass(msg.type)", ng-repeat="msg in chat.messages")
       .panel-footer(ng-controller="MessageCtrl", ng-show="chat.visible")
-        form.input-group(ng-submit="send()")
+        form.input-group(ng-submit="send($event)")
           input.form-control.input-sm(placeholder="Message...", type="text", ng-disabled="disabled || blocked", ng-model="message")
           span.input-group-btn
             input.btn.btn-default.btn-sm(type="submit", value="Send")

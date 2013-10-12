@@ -15,6 +15,8 @@ module.exports = Users
  * @param {SocketNamespace} io Socket.io namespace
  */
 function Users(io) {
+  var self = this
+
   this.io = io
 
   /**
@@ -33,6 +35,29 @@ function Users(io) {
 
   // INFO: reference for settings manager to get users list
   settingsManager.users = this
+
+  setInterval(function clearPrivateHistory() {
+    console.log('clearing private history')
+
+    self.eachUser(function iterator(user) {
+      var i = 0
+        , min = Date.now() - settingsManager.privateMessagesTTL
+        , history = user.session.history
+
+      console.log('clearing history for %s.length=%d', user.name, history.length)
+
+      while (i < history.length) {
+        console.log('clearing history: timestamp=%d, min=%d', history[i][3], min)
+        if (history[i][3] < min) {
+          history.splice(i, 1)
+        } else {
+          i++
+        }
+      }
+
+      user.session.save()
+    })
+  }, settingsManager.privateMessagesTTL)
 }
 
 
@@ -98,17 +123,22 @@ Users.prototype.deleteByName = function(name) {
 
 
 /**
- * Iterate through all the users
+ * Iterate through all the users asynchronously
  *
  * @param {Function} itr Iterator which takes {User} objects as the only arg.
  */
 Users.prototype.eachUser = function(itr) {
-  var name
+  var self = this
+    , name
 
-  for (name in this.users) {
-    if (this.users.hasOwnProperty(name)) {
-      itr.call(this, this.users[name])
-    }
+  for (name in self.users) {
+    (function wrapper(name) {
+      process.nextTick(function runLater() {
+        if (self.users.hasOwnProperty(name)) {
+          itr.call(self, self.users[name])
+        }
+      })
+    }(name))
   }
 }
 

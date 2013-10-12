@@ -70,6 +70,14 @@ html(ng-app='ca', ng-controller='SettingsCtrl')
             .col-lg-8
               input.form-control(id='txtSavedMessagesCount', min='10', type='number', ng-model='savedMessagesCount')
           .form-group
+            label.col-lg-4.control-label(for='txtPrivateMessagesCount') Private messages history size:
+            .col-lg-8
+              input.form-control(id='txtPrivateMessagesCount', min='10', type='number', ng-model='privateMessagesCount')
+          .form-group
+            label.col-lg-4.control-label(for='txtPrivateMessagesTTL') Private messages TTL:
+            .col-lg-8
+              input.form-control(id='txtPrivateMessagesTTL', min='10000', type='number', ng-model='privateMessagesTTL')
+          .form-group
             label.col-lg-4.control-label(for='txtChatWidth') Chat width:
             .col-lg-8.input-group
               input.form-control(id='txtChatWidth', min='400', type='number', ng-model='chatWidth')

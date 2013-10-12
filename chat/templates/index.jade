@@ -33,7 +33,7 @@
         p.cooldown.text-danger
           span(ng-show="blocked") Cool down {{ blocked|interval }} minutes.
         .message-box(ng-controller="MessageCtrl")
-          form.input-group(ng-submit="send()")
+          form.input-group(ng-submit="send($event)")
             span.input-group-btn
               a.btn.btn-default(ng-click="changeName()") &gt;{{ me.name }}
             input.form-control(placeholder="Type message...", type="text", ng-disabled="disabled || blocked", ng-model="message")

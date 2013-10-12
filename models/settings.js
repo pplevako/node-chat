@@ -192,8 +192,8 @@ SettingsManager.prototype.serialize = function() {
       'port', 'admin', 'allowedDomains', 'blacklist', 'bannedIPs', 'chatWidth',
       'chatHeight', 'allowedURLDomains', 'bitlyLogin', 'bitlyKey',
       'coolDownTimeout', 'maxMessagesPerMin', 'privateMessagesCount',
-      'savedMessagesCount', 'hidden', 'chatDisabled', 'privateChatDisabled',
-      'silentUserEnterLeave', 'chatPageURL'
+      'privateMessagesTTL', 'savedMessagesCount', 'hidden', 'chatDisabled',
+      'privateChatDisabled', 'silentUserEnterLeave', 'chatPageURL'
     ]
   keys.forEach(function(key) {
     out[key] = this[key]

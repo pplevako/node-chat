@@ -18,6 +18,5 @@ exports.applyTo = function(obj, address) {
   obj.state = encodeURIComponent(lookup.region)
   obj.city = encodeURIComponent(lookup.city)
   obj.ll = lookup.ll || [0, 0]
-
   return true
 }

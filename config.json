@@ -25,6 +25,7 @@
  "coolDownTimeout": 5000,
  "maxMessagesPerMin": 1000,
  "privateMessagesCount": 10,
+ "privateMessagesTTL": 120000,
  "savedMessagesCount": 100,
  "hidden": false,
  "chatDisabled": false,

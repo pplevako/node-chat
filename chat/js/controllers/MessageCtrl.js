@@ -11,7 +11,7 @@ define([
       $(config.renameModalSelector).modal('show')
     }
 
-    $scope.send = function() {
+    $scope.send = function($event) {
       var message = ($scope.message || '').trim()
         , to = $rootScope.current.name
 
@@ -20,8 +20,8 @@ define([
       }
 
       $scope.disabled = true
-      setTimeout(function() {
-        $rootScope.$apply(function() {
+      setTimeout(function sendTimeout() {
+        $rootScope.$apply(function scopeApplied() {
           $scope.disabled = false
 
           if (to === config.mainChatLabel) {
@@ -32,6 +32,10 @@ define([
 
           $scope.message = ''
         })
+
+        setTimeout(function focusTimeout() {
+          $($event.target).find('input[type=text]').focus()
+        }, 10)
       }, config.lockTimeout)
     }
 
