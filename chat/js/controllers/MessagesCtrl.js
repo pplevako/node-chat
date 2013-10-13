@@ -139,6 +139,9 @@ define([
 
       // go back to main
       $scope.setCurrent($scope.getChat(config.mainChatLabel))
+
+      // make server clear private history
+      $io.emit('clear private', chat.name)
     }
 
     /**
@@ -319,6 +322,13 @@ define([
 
 
   MessagesCtrl.prototype.registerIOListeners = function($scope, $rootScope, $io) {
+    $io.on('clear private', function(username) {
+      var chat = $scope.getChat(username)
+      if (!chat || config.privateMode !== true) return
+
+      $scope.close(chat)
+    })
+
     /** Global chat history received */
     $io.on('history', function(history) {
       var mainChat = $scope.getChat(config.mainChatLabel)
@@ -329,7 +339,7 @@ define([
       $scope.chats.splice(1)
 
       while (data = history.shift()) {
-        if (data[0] === 'private' && config.privateMode !== true) {
+        if (data[0] === 'private') {
           data[0] = null
 
           var name = data.pop()

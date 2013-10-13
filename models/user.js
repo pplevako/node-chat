@@ -154,8 +154,29 @@ User.prototype.ban = function() {
     var io = this.manager.io
       , sock = io.sockets[id]
 
-    sock.emit.apply(sock, args)
+    if (sock) sock.emit.apply(sock, args)
   }, this)
+}
+
+
+
+/**
+ * Clear private chat history
+ */
+User.prototype.clearPrivateHistory = function(username) {
+  var i = this.session.history.length
+    , msg
+    , shouldSave = false
+
+  while (i) {
+    msg = this.session.history[--i]
+    if (msg[1] === username || msg[4] === username) {
+      this.session.history.splice(i, 1)
+      shouldSave = true
+    }
+  }
+
+  shouldSave && this.session.save()
 }
 
 

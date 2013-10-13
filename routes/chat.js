@@ -32,6 +32,12 @@ module.exports = function(io) {
       }
 
 
+      function clearHistoryRequest(username) {
+        user.clearPrivateHistory(username)
+        user.emit('clear private', username)
+      }
+
+
       function messageRequest(message) {
         validator
           .message(user, message)
@@ -72,6 +78,7 @@ module.exports = function(io) {
 
       socket.on('message', messageRequest);
       socket.on('private message', privateMessageRequest)
+      socket.on('clear private', clearHistoryRequest)
       socket.on('rename', renameRequest)
       socket.on('disconnect', socketDisconnected)
     })
